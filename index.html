@@ -194,12 +194,12 @@
         <div class="card no-print">
             <h2>1. Tur- og personopplysninger</h2>
             <div class="form-group">
-                <label for="ansattNavn">Ansattes navn</label>
-                <input type="text" id="ansattNavn" placeholder="Skriv navn..." oninput="beregnAlt()">
-            </div>
-            <div class="form-group">
                 <label for="skoleNavn">Skole/Virksomhet</label>
                 <input type="text" id="skoleNavn" value="Hånes skoleenhet" oninput="beregnAlt()">
+            </div>
+            <div class="form-group">
+                <label for="ansattNavn">Ansattes navn</label>
+                <input type="text" id="ansattNavn" placeholder="Skriv navn..." oninput="beregnAlt()">
             </div>
             <div class="form-group">
                 <label for="stillingsprosent">Stillingsprosent</label>
@@ -267,7 +267,7 @@
             </div>
 
             <div class="contract-section">
-                <h3>1. Parter og stillingsforhold</h3>
+                <h3>1. Stillingsforhold</h3>
                 <table style="width:100%; font-size: 12px; line-height: 1.4;">
                     <tr><td style="width: 25%; border:none; padding:2px 0;"><strong>Arbeidsgiver:</strong></td><td id="conSkole" style="border:none; padding:2px 0;">Hånes skoleenhet</td></tr>
                     <tr><td style="border:none; padding:2px 0;"><strong>Ansatt:</strong></td><td id="conNavn" style="border:none; padding:2px 0;">-</td></tr>
@@ -296,8 +296,8 @@
                         <tr>
                             <th style="width: 8%;">Valg</th>
                             <th style="width: 22%;">Modell</th>
-                            <th>Økonomisk oppgjør (Lønn)</th>
-                            <th>Tidsavstemming (Avspasering / Tidskonto)</th>
+                            <th>Økonomisk oppgjør</th>
+                            <th>Avspasering</th>
                         </tr>
                     </thead>
                     <tbody>
