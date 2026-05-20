@@ -6,11 +6,15 @@
     <title>Leirskoleavtale (SGS 1010)</title>
     <link rel="icon" type="image/png" href="leirskole_01.png">
     <link rel="apple-touch-icon" href="leirskole_01.png">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         :root {
             --primary: #2c3e50;
             --secondary: #415b76;
             --accent: #27ae60;
+            --blue-btn: #2980b9;
             --background: #f4f6f8;
             --card-bg: #ffffff;
             --border: #dcdde1;
@@ -105,18 +109,28 @@
         .result-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .result-row.total { font-weight: bold; border-top: 1px solid var(--border); padding-top: 5px; color: var(--primary); }
 
+        /* Knapp-design */
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
         button.btn {
-            background: var(--accent);
             color: white;
             border: none;
             padding: 10px 15px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
             width: 100%;
-            margin-top: 10px;
+            transition: opacity 0.2s;
         }
+        button.btn:hover { opacity: 0.9; }
+        button.btn-print { background: var(--blue-btn); }
+        button.btn-pdf { background: var(--accent); }
 
         /* KONTRAKT-STYLING */
         .contract-preview {
@@ -170,7 +184,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="full-page-content">
     <header class="no-print">
         <h1>Avtale- og beregningsverktøy for overnattingsturer</h1>
         <p class="subtitle">I henhold til SGS 1010, SFS 2213 og Arbeidsmiljølovens overtidsbestemmelser</p>
@@ -239,10 +253,14 @@
                 <div class="result-row"><span>Samlet SGS 1010 godtgjøring:</span><span id="resDognSum">0,-</span></div>
                 <div class="result-row total"><span>Netto plusstimer opparbeidet:</span><span id="resNettoTimerVisning">0 timer</span></div>
             </div>
-            <button class="btn" onclick="window.print()">Skriv ut / Lagre som PDF</button>
+            
+            <div class="btn-group">
+                <button class="btn btn-print" onclick="window.print()">Skriv ut</button>
+                <button class="btn btn-pdf" onclick="lastNedPDF()">Last ned PDF</button>
+            </div>
         </div>
 
-        <div class="contract-preview">
+        <div class="contract-preview" id="contract-document">
             <div class="contract-header">
                 <h2>Særavtale / Arbeidsplan</h2>
                 <p>for overnattingsturer jfr. SGS 1010, SFS 2213 & AML</p>
@@ -254,6 +272,7 @@
                     <tr><td style="width: 25%; border:none; padding:2px 0;"><strong>Arbeidsgiver:</strong></td><td id="conSkole" style="border:none; padding:2px 0;">Hånes skoleenhet</td></tr>
                     <tr><td style="border:none; padding:2px 0;"><strong>Ansatt:</strong></td><td id="conNavn" style="border:none; padding:2px 0;">-</td></tr>
                     <tr><td style="border:none; padding:2px 0;"><strong>Stilling:</strong></td><td id="conStilling" style="border:none; padding:2px 0;">-</td></tr>
+                    <tr><td style="border:none; padding:2px 0;"><strong>Årslønn:</strong></td><td id="conArslonn" style="border:none; padding:2px 0;">-</td></tr>
                 </table>
             </div>
 
@@ -314,7 +333,7 @@
                     </tbody>
                 </table>
                 <p style="font-size: 10px; font-style: italic; opacity:0.8; margin: 5px 0 0 0;">
-                    *Omregning til fridager skjer iht. SFS 2213 basert på en vektet skoledag bestående av undervisning ($741/190$) og tilstedeværelse ($506,5/190$).
+                    *Omregning til fridager skjer iht. SFS 2213 basert på en vektet skoledag bestående av undervisning (741/190) og tilstedeværelse (506,5/190).
                 </p>
             </div>
 
@@ -344,20 +363,72 @@
         document.getElementById('del1Felter').style.display = (type === 'eks1' || type === 'eks2') ? 'block' : 'none';
     }
 
-    // Formaterer tallet live mens man skriver
     function formatertArslonnInput() {
         const input = document.getElementById('arslonn');
-        // Fjern alt som ikke er siffer
         let rentNummer = input.value.replace(/\D/g, '');
-        
         if (rentNummer) {
-            // Legg til tusenskille med mellomrom
             input.value = Number(rentNummer).toLocaleString('no-NO').replace(/,/g, ' ');
         } else {
             input.value = '';
         }
         beregnAlt();
     }
+
+function lastNedPDF() {
+        const element = document.getElementById('contract-document');
+        const ansattNavn = document.getElementById('ansattNavn').value.trim() || 'Ansatt';
+        
+        // 1. Lagre de opprinnelige stilene
+        const opprinneligStil = element.style.cssText;
+        
+        // Lagre stilene til tabellene inni for å kunne rulle dem tilbake
+        const interneTabeller = element.querySelectorAll('table');
+        const opprinneligeTabellStiler = Array.from(interneTabeller).map(t => t.style.cssText);
+        
+        // 2. Tving hele dokument-containeren til å holde seg sentrert
+        element.style.setProperty('width', '100%', 'important');
+        element.style.setProperty('max-width', '100%', 'important');
+        element.style.setProperty('margin', '0 auto', 'important');
+        element.style.setProperty('padding', '0px', 'important');
+        element.style.setProperty('box-sizing', 'border-box', 'important');
+        element.style.setProperty('display', 'block', 'important');
+        
+        // --- FJERN KANTLINJE OG SKYGGE PÅ PDF ---
+        element.style.setProperty('border', 'none', 'important');
+        element.style.setProperty('box-shadow', 'none', 'important');
+        element.style.setProperty('outline', 'none', 'important');
+
+        // 3. Hold tabellene innenfor sikkerhetsmarginen
+        interneTabeller.forEach(tabell => {
+            tabell.style.setProperty('width', '98%', 'important');
+            tabell.style.setProperty('max-width', '98%', 'important');
+            tabell.style.setProperty('margin', '0 auto', 'important');
+            tabell.style.setProperty('box-sizing', 'border-box', 'important');
+        });
+
+        // 4. Konfigurasjon for PDF-en
+        const opt = {
+            margin:       [10, 10, 10, 10],
+            filename:     `Saeravtale_SGS1010_${ansattNavn.replace(/\s+/g, '_')}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { 
+                scale: 2,         
+                useCORS: true,
+                scrollY: 0,       
+                scrollX: 0
+            },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // 5. Generer og nullstill absolutt alt etterpå så skjermen din forblir lik
+        html2pdf().set(opt).from(element).save().then(() => {
+            element.style.cssText = opprinneligStil;
+            interneTabeller.forEach((tabell, index) => {
+                tabell.style.cssText = opprinneligeTabellStiler[index];
+            });
+        });
+    }
+
 
     function genererDagerTabell() {
         const startInput = document.getElementById('startTid').value;
@@ -433,9 +504,15 @@
         const stillingsType = document.getElementById('stillingsprosent').value;
         const faktiskTid = parseFloat(document.getElementById('faktiskTid').value) || 0;
         
-        // Hent ut kun tallene fra årslønn-feltet til beregningen
         const arslonnRaw = document.getElementById('arslonn').value.replace(/\s/g, '');
         const arslonn = parseFloat(arslonnRaw) || 0;
+
+        // Oppdaterer årslønn-visningen på kontrakten med formatering
+        if (arslonn > 0) {
+            document.getElementById('conArslonn').innerText = `kr ${arslonn.toLocaleString('no-NO')},-`;
+        } else {
+            document.getElementById('conArslonn').innerText = "-";
+        }
 
         document.getElementById('conOrdinar').innerText = ordinarTid.toFixed(1);
         
