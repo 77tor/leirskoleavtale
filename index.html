@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontraktsgenerator & Kalkulator - Overnattingsturer (SGS 1010)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #415b76;
+            --accent: #27ae60;
+            --background: #f4f6f8;
+            --card-bg: #ffffff;
+            --border: #dcdde1;
+            --input-fill: #e8f4fd; /* Subtil lyseblå farge for utfyllingsfelt */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        h1 { margin: 0; font-size: 22px; }
+        p.subtitle { margin: 3px 0 0 0; opacity: 0.8; font-size: 13px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 992px) {
+            .grid { grid-template-columns: 1.1fr 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary);
+            border-bottom: 2px solid var(--background);
+            padding-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-weight: bold; margin-bottom: 3px; font-size: 13px; }
+        
+        /* Lyseblå bakgrunn på input og select i panelet */
+        input, select { 
+            width: 100%; 
+            padding: 6px 10px; 
+            border: 1px solid #b4d4ec; 
+            background-color: var(--input-fill);
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            font-size: 13px; 
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        
+        input:focus, select:focus {
+            background-color: #fff;
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .day-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 12px; }
+        .day-table th, .day-table td { padding: 5px; text-align: left; border-bottom: 1px solid var(--border); }
+        .day-table input[type="time"] { padding: 2px 4px; font-size: 12px; width: auto; }
+
+        .result-box {
+            background: #eef2f7;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid var(--secondary);
+            font-size: 13px;
+        }
+        .result-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .result-row.total { font-weight: bold; border-top: 1px solid var(--border); padding-top: 5px; color: var(--primary); }
+
+        button.btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* KONTRAKT-STYLING */
+        .contract-preview {
+            background: white;
+            padding: 30px 35px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-family: "Times New Roman", Times, serif;
+            color: #000;
+            line-height: 1.4;
+        }
+
+        .contract-header {
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+        .contract-header h2 { margin: 0; font-size: 18px; }
+        .contract-header p { margin: 2px 0 0 0; font-size: 12px; }
+
+        .contract-section { margin-bottom: 28px; }
+        .contract-section h3 {
+            margin: 0 0 8px 0;
+            border-bottom: 1px solid #000;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .contract-section p, .contract-section td { font-size: 12px; }
+
+        .con-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        .con-table th, .con-table td { border: 1px solid #000; padding: 6px 8px; text-align: left; }
+        .con-table th { background-color: #f2f2f2; }
+
+        .signature-area { margin-top: 35px; display: flex; justify-content: space-between; }
+        .sig-line { width: 45%; border-top: 1px solid #000; text-align: center; padding-top: 4px; font-size: 11px; }
+
+        @media print {
+            .no-print, header, .card { display: none !important; }
+            body, html { background: #ffffff !important; background-color: #ffffff !important; margin: 0 !important; padding: 0 !important; }
+            .container, .grid { display: block !important; max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; background: transparent !important; box-shadow: none !important; border: none !important; }
+            .contract-preview { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; background: #ffffff !important; font-size: 11pt; }
+            .contract-header { margin-bottom: 22px; }
+            .contract-section { margin-bottom: 25px; }
+            .contract-section h3 { font-size: 12pt; margin-bottom: 6px; }
+            .contract-section p, .contract-section td { font-size: 10.5pt; }
+            .signature-area { margin-top: 45px; }
+            @page { size: A4; margin: 1.4cm 1.5cm 1.4cm 1.5cm; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="no-print">
+        <h1>Avtale- og beregningsverktøy for overnattingsturer</h1>
+        <p class="subtitle">I henhold til SGS 1010, SFS 2213 og Arbeidsmiljølovens overtidsbestemmelser</p>
+    </header>
+
+    <div class="grid">
+        <div class="card no-print">
+            <h2>1. Tur- og personopplysninger</h2>
+            <div class="form-group">
+                <label for="ansattNavn">Ansattes navn</label>
+                <input type="text" id="ansattNavn" placeholder="Skriv navn..." oninput="beregnAlt()">
+            </div>
+            <div class="form-group">
+                <label for="skoleNavn">Skole/Virksomhet</label>
+                <input type="text" id="skoleNavn" value="Hånes skoleenhet" oninput="beregnAlt()">
+            </div>
+            <div class="form-group">
+                <label for="stillingsprosent">Stillingsprosent</label>
+                <select id="stillingsprosent" onchange="beregnAlt()">
+                    <option value="100" selected>100 % stilling (Kvalifiserer for overtidstillegg)</option>
+                    <option value="part">Deltid (Merarbeid inntil full stilling)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="arslonn">Årslønn</label>
+                <input type="text" id="arslonn" placeholder="f.eks. 600 000" oninput="formatertArslonnInput()">
+            </div>
+            <div class="form-group">
+                <label for="turType">Type tur (SGS 1010)</label>
+                <select id="turType" onchange="toggleTurTypeFields(); beregnAlt();">
+                    <option value="eks1">Del I: Dagarbeidstaker (Faktisk tid)</option>
+                    <option value="eks2">Del I: Turnusarbeidstaker (Faktisk tid)</option>
+                    <option value="eks3" selected>Del II: Bemannet leirskole (9t/døgn)</option>
+                    <option value="eks4">Del II: Utenlandstur m/ped.ansvar (12t/døgn)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="startTid">Avreise</label>
+                <input type="datetime-local" id="startTid" onchange="genererDagerTabell()">
+            </div>
+            <div class="form-group">
+                <label for="sluttTid">Hjemkomst</label>
+                <input type="datetime-local" id="sluttTid" onchange="genererDagerTabell()">
+            </div>
+            <div id="del1Felter" style="display: none;">
+                <div class="form-group">
+                    <label for="faktiskTid">Total planlagt arbeidstid på turen (timer)</label>
+                    <input type="number" id="faktiskTid" value="0" oninput="beregnAlt()">
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 15px;">
+                <label>Planfestet tid som faller bort på skolen</label>
+                <table class="day-table">
+                    <thead>
+                        <tr><th>Dato / Ukedag</th><th>Start</th><th>Slutt</th><th>Netto tid</th></tr>
+                    </thead>
+                    <tbody id="dagerTbody"></tbody>
+                </table>
+                <div style="text-align: right; font-weight: bold; margin-top: 5px; font-size: 13px; color: var(--primary);">
+                    Bortfalt tid totalt: <span id="ordinarTotalVisning">0</span> timer
+                </div>
+            </div>
+            <h2>2. Live data til avstemming</h2>
+            <div class="result-box">
+                <div class="result-row"><span>Reisens varighet:</span><span id="resVarighet">-</span></div>
+                <div class="result-row"><span>Samlet SGS 1010 godtgjøring:</span><span id="resDognSum">0,-</span></div>
+                <div class="result-row total"><span>Netto plusstimer opparbeidet:</span><span id="resNettoTimerVisning">0 timer</span></div>
+            </div>
+            <button class="btn" onclick="window.print()">Skriv ut / Lagre som PDF</button>
+        </div>
+
+        <div class="contract-preview">
+            <div class="contract-header">
+                <h2>Særavtale / Arbeidsplan</h2>
+                <p>for overnattingsturer jfr. SGS 1010, SFS 2213 & AML</p>
+            </div>
+
+            <div class="contract-section">
+                <h3>1. Parter og stillingsforhold</h3>
+                <table style="width:100%; font-size: 12px; line-height: 1.4;">
+                    <tr><td style="width: 25%; border:none; padding:2px 0;"><strong>Arbeidsgiver:</strong></td><td id="conSkole" style="border:none; padding:2px 0;">Hånes skoleenhet</td></tr>
+                    <tr><td style="border:none; padding:2px 0;"><strong>Ansatt:</strong></td><td id="conNavn" style="border:none; padding:2px 0;">-</td></tr>
+                    <tr><td style="border:none; padding:2px 0;"><strong>Stilling:</strong></td><td id="conStilling" style="border:none; padding:2px 0;">-</td></tr>
+                </table>
+            </div>
+
+            <div class="contract-section">
+                <h3>2. Reisens omfang og tidsregnskap</h3>
+                <table style="width:100%; font-size: 12px; line-height: 1.4;">
+                    <tr><td style="width: 25%; border:none; padding:2px 0;"><strong>Kategori:</strong></td><td id="conType" style="border:none; padding:2px 0;">-</td></tr>
+                    <tr><td style="border:none; padding:2px 0;"><strong>Tidsrom:</strong></td><td style="border:none; padding:2px 0;">Fra <span id="conStart">-</span> til <span id="conSlutt">-</span> (<span id="conVarighet">-</span>)</td></tr>
+                    <tr><td style="border:none; padding:2px 0;"><strong>Timeberegning:</strong></td><td style="border:none; padding:2px 0;">Bortfalt tid på skolen: <strong><span id="conOrdinar">-</span> t</strong> | Godskrevet/faktisk tid på tur: <strong><span id="conGodskrevet">-</span> t</strong></td></tr>
+                    <tr><td style="border:none; padding:2px 0; color:#000;"><strong>Netto tid:</strong></td><td style="border:none; padding:2px 0; color:#000;"><strong><span id="conNetto">-</span> plusstimer til avstemming</strong></td></tr>
+                    <tr><td style="border:none; padding:4px 0 2px 0; border-top:1px dashed #ccc;"><strong>Døgngodtgjørelse:</strong></td><td style="border:none; padding:4px 0 2px 0; border-top:1px dashed #ccc;"><span id="conDognBeregning">-</span> = <strong>kr <span id="conDognTotal">-</span></strong></td></tr>
+                </table>
+            </div>
+
+            <div class="contract-section">
+                <h3>3. Sluttbehandlingsalternativer (Sett ett kryss)</h3>
+                <p style="margin: 0 0 6px 0; font-size: 11px;">Partene velger herved én av følgende samlede oppgjørsmodeller for turen:</p>
+                
+                <table class="con-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%;">Valg</th>
+                            <th style="width: 22%;">Modell</th>
+                            <th>Økonomisk oppgjør (Lønn)</th>
+                            <th>Tidsavstemming (Avspasering / Tidskonto)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-weight:bold; font-size:14px; vertical-align: middle;">[ &nbsp; ]</td>
+                            <td><strong>Alt. 1</strong><br><small style="color:#555;">Lønn + tid</small></td>
+                            <td>Døgngodtgjørelse utbetales:<br><strong>kr <span id="tAlt1Lonn">-</span></strong></td>
+                            <td>Netto plusstimer overføres 1:1:<br><strong><span id="tAlt1Timer">-</span> timer</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center; font-weight:bold; font-size:14px; vertical-align: middle;">[ &nbsp; ]</td>
+                            <td><strong>Alt. 2</strong><br><small style="color:#555;">Alt i lønn</small></td>
+                            <td>Døgngodtgjørelse + plusstimer utbetales:<br><span style="font-size:11px; color:#444;">Sats: kr <span id="tAlt2Sats">-</span> + Timer: kr <span id="tAlt2Overtid">-</span></span><br><strong>Totalt brutto: kr <span id="tAlt2Total">-</span></strong></td>
+                            <td>Ingen timer til tidskonto.<br><small style="font-style:italic; opacity:0.6;">(Alt utbetales)</small></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center; font-weight:bold; font-size:14px; vertical-align: middle;">[ &nbsp; ]</td>
+                            <td><strong>Alt. 3</strong><br><small style="color:#555;">Alt til fritid</small></td>
+                            <td>
+                                <span id="tAlt3LonnTekst">Døgngodtgjørelse avspaseres.</span>
+                                <div id="tAlt3TilleggBoks" style="display:none; margin-top:2px; border-top:1px dashed #777; padding-top:2px;">
+                                    Utbetalt 50% overtidstillegg:<br><strong style="color:#b5179e;">kr <span id="tAlt3TilleggKroner">-</span></strong>
+                                </div>
+                            </td>
+                            <td>
+                                <strong>Samlet tidsavstemming til tidskonto:</strong><br>
+                                • Total fritid: <strong><span id="tAlt3SamletSamling">-</span> fridager</strong><br>
+                                <span style="font-size:10.5px; color:#555;">
+                                    (Omfatter <span id="tAlt3DagerVis">-</span> dager fra døgngodt + <span id="tAlt3TimerOmregnetVis">-</span> dager fra plusstimer)
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 10px; font-style: italic; opacity:0.8; margin: 5px 0 0 0;">
+                    *Omregning til fridager skjer iht. SFS 2213 basert på en vektet skoledag bestående av undervisning ($741/190$) og tilstedeværelse ($506,5/190$).
+                </p>
+            </div>
+
+            <div class="contract-section">
+                <h3>4. Godkjenning og Signatur</h3>
+                <p style="font-size: 10px; text-align: justify; opacity: 0.85; margin: 0 0 15px 0; line-height: 1.4;">
+                    Avtalen er bindende og opprettet i samsvar med SGS 1010, SFS 2213 og Hovedtariffavtalen. Uttak av oppsparte plusstimer og omregnede fridager skal godkjennes av rektor og avvikles slik at det ikke hindrer skolens forsvarlige drift.
+                </p>
+                <div class="signature-area">
+                    <div class="sig-line">Dato / Sted</div>
+                    <div class="sig-line">Dato / Sted</div>
+                </div>
+                <div class="signature-area" style="margin-top: 25px;">
+                    <div class="sig-line">For arbeidsgiver (Rektor/Leder)</div>
+                    <div class="sig-line">Ansattes signatur</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ukedager = ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"];
+
+    function toggleTurTypeFields() {
+        const type = document.getElementById('turType').value;
+        document.getElementById('del1Felter').style.display = (type === 'eks1' || type === 'eks2') ? 'block' : 'none';
+    }
+
+    // Formaterer tallet live mens man skriver
+    function formatertArslonnInput() {
+        const input = document.getElementById('arslonn');
+        // Fjern alt som ikke er siffer
+        let rentNummer = input.value.replace(/\D/g, '');
+        
+        if (rentNummer) {
+            // Legg til tusenskille med mellomrom
+            input.value = Number(rentNummer).toLocaleString('no-NO').replace(/,/g, ' ');
+        } else {
+            input.value = '';
+        }
+        beregnAlt();
+    }
+
+    function genererDagerTabell() {
+        const startInput = document.getElementById('startTid').value;
+        const sluttInput = document.getElementById('sluttTid').value;
+        const tbody = document.getElementById('dagerTbody');
+        if (!startInput || !sluttInput) return;
+
+        const startDato = new Date(startInput.split('T')[0] + "T00:00:00");
+        const sluttDato = new Date(sluttInput.split('T')[0] + "T00:00:00");
+        tbody.innerHTML = ""; 
+        let gjeldendeDato = new Date(startDato);
+        
+        while (gjeldendeDato <= sluttDato) {
+            const datoStreng = gjeldendeDato.toISOString().split('T')[0];
+            const dagIndex = gjeldendeDato.getDay(); 
+            let sStart = "", sSlutt = "";
+            if(dagIndex >= 1 && dagIndex <= 5) {
+                sStart = "08:15";
+                sSlutt = (dagIndex===1) ? "15:00" : (dagIndex===4) ? "14:30" : (dagIndex===5) ? "14:00" : "15:30";
+            }
+
+            const rad = document.createElement('tr');
+            rad.innerHTML = `
+                <td><strong>${ukedager[dagIndex]}</strong> <small style="color:#7f8c8d;">${gjeldendeDato.toLocaleDateString('no-NO')}</small></td>
+                <td><input type="time" class="dag-start" value="${sStart}" data-dato="${datoStreng}" onchange="beregnAlt()"></td>
+                <td><input type="time" class="dag-slutt" value="${sSlutt}" data-dato="${datoStreng}" onchange="beregnAlt()"></td>
+                <td><span class="dag-timer" id="timer-${datoStreng}">0</span> t</td>
+            `;
+            tbody.appendChild(rad);
+            gjeldendeDato.setDate(gjeldendeDato.getDate() + 1);
+        }
+        beregnAlt();
+    }
+
+    function beregnOrdinatTidFraTabell() {
+        const startFelter = document.querySelectorAll('.dag-start');
+        let totalOrdinatTid = 0;
+        
+        for (let i = 0; i < startFelter.length; i++) {
+            const startVal = startFelter[i].value;
+            const sluttVal = document.querySelectorAll('.dag-slutt')[i].value;
+            const datoStreng = startFelter[i].getAttribute('data-dato');
+            const visning = document.getElementById(`timer-${datoStreng}`);
+
+            if (startVal && sluttVal) {
+                const [sH, sM] = startVal.split(':').map(Number);
+                const [lH, lM] = sluttVal.split(':').map(Number);
+                
+                let diff = (lH + lM/60) - (sH + sM/60);
+                if (diff > 0) {
+                    visning.innerText = diff.toFixed(1);
+                    totalOrdinatTid += diff; 
+                } else {
+                    visning.innerText = "0";
+                }
+            } else {
+                visning.innerText = "0";
+            }
+        }
+        document.getElementById('ordinarTotalVisning').innerText = totalOrdinatTid.toFixed(1);
+        return totalOrdinatTid;
+    }
+
+    function beregnAlt() {
+        const startInputStr = document.getElementById('startTid').value;
+        const sluttInputStr = document.getElementById('sluttTid').value;
+        
+        document.getElementById('conNavn').innerText = document.getElementById('ansattNavn').value || "-";
+        document.getElementById('conSkole').innerText = document.getElementById('skoleNavn').value || "-";
+        
+        const ordinarTid = beregnOrdinatTidFraTabell();
+        const turType = document.getElementById('turType').value;
+        const stillingsType = document.getElementById('stillingsprosent').value;
+        const faktiskTid = parseFloat(document.getElementById('faktiskTid').value) || 0;
+        
+        // Hent ut kun tallene fra årslønn-feltet til beregningen
+        const arslonnRaw = document.getElementById('arslonn').value.replace(/\s/g, '');
+        const arslonn = parseFloat(arslonnRaw) || 0;
+
+        document.getElementById('conOrdinar').innerText = ordinarTid.toFixed(1);
+        
+        if (!startInputStr || !sluttInputStr) {
+            document.getElementById('resVarighet').innerText = "-";
+            document.getElementById('resDognSum').innerText = "0,-";
+            document.getElementById('resNettoTimerVisning').innerText = "0 timer";
+            document.getElementById('conVarighet').innerText = "-";
+            document.getElementById('conStart').innerText = "-";
+            document.getElementById('conSlutt').innerText = "-";
+            document.getElementById('conDognBeregning').innerText = "-";
+            document.getElementById('conDognTotal').innerText = "0";
+            document.getElementById('conGodskrevet').innerText = "0.0";
+            document.getElementById('conNetto').innerText = "0.0";
+            return;
+        }
+
+        const start = new Date(startInputStr);
+        const slutt = new Date(sluttInputStr);
+        const diffMs = slutt - start;
+        if(diffMs <= 0 || isNaN(diffMs)) return;
+
+        const totalTimer = diffMs / (1000 * 60 * 60);
+        const heleDogn = Math.floor(totalTimer / 24);
+        const restTimer = totalTimer % 24;
+        let tellendeDogn = heleDogn + (restTimer >= 3 ? 1 : 0);
+
+        let sats = 0, sjablongDogn = 0, turNavn = "";
+        if(turType==='eks1'||turType==='eks2') { sats = 550; turNavn = "Del I: Dagarbeidstaker (Faktisk)"; }
+        else if(turType==='eks3') { sats = 1610; sjablongDogn = 9; turNavn = "Del II: Bemannet leirskole"; }
+        else { sats = 2030; sjablongDogn = 12; turNavn = "Del II: Utenlandstur"; }
+
+        document.getElementById('conType').innerText = turNavn;
+        document.getElementById('conStilling').innerText = stillingsType === '100' ? "100 % Fast stilling (Overtidsberettiget)" : "Deltid / merarbeidstakst";
+
+        const totalDognKronsum = tellendeDogn * sats;
+        document.getElementById('resDognSum').innerText = `kr ${totalDognKronsum.toLocaleString('no-NO')},–`;
+        document.getElementById('resVarighet').innerText = `${heleDogn}d og ${restTimer.toFixed(1)}t`;
+        document.getElementById('conVarighet').innerText = `${heleDogn}d ${restTimer.toFixed(0)}t`;
+        document.getElementById('conStart').innerText = start.toLocaleString('no-NO', {dateStyle:'short', timeStyle:'short'});
+        document.getElementById('conSlutt').innerText = slutt.toLocaleString('no-NO', {dateStyle:'short', timeStyle:'short'});
+
+        document.getElementById('conDognBeregning').innerText = `${tellendeDogn} døgn à kr ${sats.toLocaleString('no-NO')}`;
+        document.getElementById('conDognTotal').innerText = totalDognKronsum.toLocaleString('no-NO');
+
+        const timelonnUndervisning = arslonn ? ((arslonn * 1400 * 100) / (741 * 1687.5 * 112)) : 0;
+        const timelonnTilstedevaerelse = arslonn ? (arslonn / 1950) : 0;
+        
+        const timerUndervisningPerDag = 741 / 190;
+        const timerTilstedevaerelsePerDag = (1150 - 741) / 190;
+        const lengdeVektetArbeidsdag = timerUndervisningPerDag + timerTilstedevaerelsePerDag;
+
+        const kostnadPerFridag = (timerUndervisningPerDag * timelonnUndervisning) + (timerTilstedevaerelsePerDag * timelonnTilstedevaerelse);
+        const antallAvspaseringsdagerFraDognsats = kostnadPerFridag > 0 ? (totalDognKronsum / kostnadPerFridag) : 0;
+
+        let totalGodskrevet = 0;
+        if(turType==='eks1'||turType==='eks2') { 
+            totalGodskrevet = faktiskTid; 
+        } else { 
+            totalGodskrevet = (heleDogn * sjablongDogn) + ((restTimer / 24) * sjablongDogn); 
+        }
+        
+        let nettoTimer = totalGodskrevet - ordinarTid;
+
+        document.getElementById('resNettoTimerVisning').innerText = `${nettoTimer.toFixed(1)} timer`;
+        document.getElementById('conGodskrevet').innerText = totalGodskrevet.toFixed(1);
+        document.getElementById('conNetto').innerText = nettoTimer.toFixed(1);
+
+        let fridagerFraPlusstimer = (nettoTimer > 0 && lengdeVektetArbeidsdag > 0) ? (nettoTimer / lengdeVektetArbeidsdag) : 0;
+        let samletFritidDager = antallAvspaseringsdagerFraDognsats + fridagerFraPlusstimer;
+
+        let satsPlusstimer = timelonnTilstedevaerelse * (stillingsType==='100' ? 1.5 : 1);
+        let satsKunTillegg = timelonnTilstedevaerelse * 0.5;
+
+        const kronePlusstimerFull = nettoTimer > 0 ? (nettoTimer * satsPlusstimer) : 0;
+        const kroneKunTillegg = nettoTimer > 0 ? (nettoTimer * satsKunTillegg) : 0;
+
+        document.getElementById('tAlt1Lonn').innerText = totalDognKronsum.toLocaleString('no-NO');
+        document.getElementById('tAlt1Timer').innerText = nettoTimer.toFixed(1);
+
+        document.getElementById('tAlt2Sats').innerText = totalDognKronsum.toLocaleString('no-NO');
+        document.getElementById('tAlt2Overtid').innerText = Math.round(kronePlusstimerFull).toLocaleString('no-NO');
+        document.getElementById('tAlt2Total').innerText = Math.round(totalDognKronsum + kronePlusstimerFull).toLocaleString('no-NO');
+
+        document.getElementById('tAlt3SamletSamling').innerText = samletFritidDager.toFixed(2);
+        document.getElementById('tAlt3DagerVis').innerText = antallAvspaseringsdagerFraDognsats.toFixed(2);
+        document.getElementById('tAlt3TimerOmregnetVis').innerText = fridagerFraPlusstimer.toFixed(2);
+
+        const bTillegg = document.getElementById('tAlt3TilleggBoks');
+        if (stillingsType === '100' && nettoTimer > 0 && arslonn > 0) {
+            bTillegg.style.display = 'block';
+            document.getElementById('tAlt3TilleggKroner').innerText = Math.round(kroneKunTillegg).toLocaleString('no-NO');
+            document.getElementById('tAlt3LonnTekst').innerText = "Døgngodtgjørelse avspaseres.";
+        } else {
+            bTillegg.style.display = 'none';
+            document.getElementById('tAlt3LonnTekst').innerText = "Ingen utbetaling.";
+        }
+    }
+
+    toggleTurTypeFields();
+</script>
+
+</body>
+</html>
