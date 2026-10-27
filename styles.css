@@ -1,0 +1,136 @@
+/* ==========================================================================
+   1. VARIABLER OG BASE-STILER
+   ========================================================================== */
+:root { --primary: #1e293b; --primary-light: #334155; --accent: #10b981; --blue-btn: #2563eb; --background: #f8fafc; --card-bg: #ffffff; --border: #cbd5e1; --input-fill: #f1f5f9; --focus-ring: #93c5fd; --text-main: #0f172a; --text-muted: #64748b; }
+* { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--background); color: var(--text-main); line-height: 1.5; margin: 0; padding: 20px 15px; }
+.container { max-width: 850px; margin: 0 auto; }
+header { text-align: center; margin-bottom: 20px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); }
+h1 { margin: 0; font-size: 24px; font-weight: 700; }
+p.subtitle { margin: 6px 0 0 0; opacity: 0.85; font-size: 13.5px; }
+.badge { display: inline-block; padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; background: #e2e8f0; color: #334155; }
+.tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #cbd5e1; color: #334155; font-size: 11px; font-weight: bold; cursor: help; }
+
+/* ==========================================================================
+   2. STARTSIDE-STILER (STEG 0)
+   ========================================================================== */
+.start-card { text-align: center; padding: 32px 24px; }
+.start-card h2 { justify-content: center; font-size: 20px; border: none; padding-bottom: 0; }
+.start-info-grid { display: grid; grid-template-columns: 1fr; gap: 15px; text-align: left; margin: 24px 0; }
+@media (min-width: 600px) { .start-info-grid { grid-template-columns: 1fr 1fr; } }
+.info-box { background: var(--input-fill); border: 1px solid var(--border); padding: 16px; border-radius: 8px; }
+.info-box h4 { margin: 0 0 6px 0; color: var(--primary); font-size: 14px; }
+.info-box p { margin: 0; font-size: 12.5px; color: var(--text-muted); }
+.start-actions { display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: 0 auto; }
+button.btn-lg { padding: 14px 20px; font-size: 15px; width: 100%; }
+
+/* ==========================================================================
+   3. STEG-NAVIGASJON (PROGRESS BAR)
+   ========================================================================== */
+.step-tracker { display: flex; justify-content: space-between; margin-bottom: 20px; background: white; padding: 12px; border-radius: 10px; border: 1px solid var(--border); }
+.step-item { flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.5; transition: all 0.2s; }
+.step-item.active { opacity: 1; }
+.step-num { width: 26px; height: 26px; border-radius: 50%; background: #e2e8f0; color: var(--text-main); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+.step-item.active .step-num { background: var(--blue-btn); color: white; }
+.step-label { font-size: 11.5px; font-weight: 600; color: var(--text-main); }
+.form-step { display: none; }
+.form-step.active { display: block; }
+
+/* ==========================================================================
+   4. KORT, SKJEMA OG INPUT-FELTER
+   ========================================================================== */
+.card { background: var(--card-bg); padding: 24px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); }
+.card h2 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--background); padding-bottom: 10px; font-size: 16px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+.form-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+@media (min-width: 600px) { .form-grid.two-col { grid-template-columns: 1fr 1fr; } }
+.form-group { margin-bottom: 14px; }
+label { display: flex; align-items: center; gap: 5px; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: #334155; }
+input, select { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; background-color: var(--input-fill); border-radius: 6px; box-sizing: border-box; font-size: 13.5px; color: var(--text-main); transition: all 0.2s; }
+input:focus, select:focus { background-color: #fff; border-color: var(--blue-btn); box-shadow: 0 0 0 3px var(--focus-ring); outline: none; }
+
+/* ==========================================================================
+   5. TABELLER OG BEREGNINGSBOKSER
+   ========================================================================== */
+.quick-actions { display: flex; gap: 8px; margin: 8px 0 12px 0; }
+.day-table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 13px; }
+.day-table th, .day-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+.day-table th { background: #f1f5f9; font-weight: 600; color: #475569; }
+.day-table input[type="time"] { padding: 5px 8px; font-size: 12.5px; width: auto; }
+.result-box { background: #f1f5f9; padding: 16px; border-radius: 8px; margin-top: 15px; border-left: 4px solid var(--primary-light); font-size: 13.5px; }
+.result-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.result-row.total { font-weight: 700; border-top: 1px solid var(--border); padding-top: 8px; margin-top: 4px; color: var(--primary); font-size: 15px; }
+.result-box.compact { padding: 10px 14px; margin-top: 10px; font-size: 12.5px; }
+.result-box.compact .result-row { margin-bottom: 3px; }
+.result-box.compact .result-row.total { padding-top: 5px; margin-top: 3px; font-size: 13.5px; }
+
+/* ==========================================================================
+   6. OPPGJØRSMODELLER (KOMPAKT DEL 4)
+   ========================================================================== */
+.model-selector { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.model-option { display: flex; align-items: flex-start; gap: 12px; border: 1.5px solid var(--border); padding: 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: #fafafa; }
+.model-option:hover { border-color: #94a3b8; background: #f8fafc; }
+.model-option.selected { border-color: var(--blue-btn); background: #eff6ff; box-shadow: 0 0 0 1px var(--blue-btn); }
+.model-option input[type="radio"] { width: auto; margin-top: 3px; cursor: pointer; }
+.model-info strong { display: block; font-size: 14px; color: var(--primary); }
+.model-info p { margin: 2px 0 0 0; font-size: 12.5px; color: var(--text-muted); }
+.model-selector.compact { gap: 8px; margin-top: 8px; }
+.model-selector.compact .model-option { padding: 9px 12px; align-items: center; }
+.model-selector.compact .model-info { width: 100%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+.model-selector.compact .model-info strong { font-size: 13.5px; }
+.model-details { display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--text-main); }
+.model-details .sub-detail { font-size: 11.5px; color: var(--text-muted); }
+
+/* ==========================================================================
+   7. KNAPPER OG NAVIGASJON
+   ========================================================================== */
+.nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+.btn-group-inline { display: flex; gap: 10px; flex-wrap: wrap; }
+button.btn { color: white; border: none; padding: 11px 18px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; gap: 6px; }
+button.btn:hover { opacity: 0.92; transform: translateY(-1px); }
+button.btn-primary { background: var(--blue-btn); }
+button.btn-secondary { background: #64748b; }
+button.btn-pdf { background: var(--accent); }
+button.btn-save { background: #8b5cf6; }
+.btn-sm { padding: 5px 12px; font-size: 12px; background: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background 0.2s; }
+.btn-sm:hover { background: #cbd5e1; }
+.btn-danger { background: #ef4444; color: white; border: none; }
+.btn-danger-subtle { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.btn-danger-subtle:hover { background: #fecaca; }
+
+/* ==========================================================================
+   8. MODALER (PREVIEW OG ARKIV)
+   ========================================================================== */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 15px; }
+.modal-overlay.active { display: flex; }
+.modal-content { background: white; width: 100%; max-width: 850px; max-height: 90vh; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; overflow: hidden; }
+.modal-header { padding: 14px 20px; background: #f8fafc; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-header h3 { margin: 0; font-size: 16px; color: var(--primary); }
+.modal-close { background: transparent; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); font-weight: bold; }
+.modal-body { padding: 25px; overflow-y: auto; background: #525659; }
+.modal-body.light { background: white; }
+.modal-footer { padding: 14px 20px; background: #f8fafc; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+
+/* ARKIVTABELL INNI MODAL */
+.archive-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+.archive-table th, .archive-table td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+.archive-table th { background: #f1f5f9; font-weight: 600; }
+.archive-actions { display: flex; gap: 6px; }
+
+/* ==========================================================================
+   9. KONTRAKTDOKUMENT OG UTSKRIFT (PRINT)
+   ========================================================================== */
+.contract-preview { background: white; padding: 35px 40px; border-radius: 4px; font-family: "Times New Roman", Times, serif; color: #000; line-height: 1.4; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin: 0 auto; max-width: 800px; }
+.contract-header { text-align: center; text-transform: uppercase; margin-bottom: 25px; }
+.contract-header h2 { margin: 0; font-size: 18px; letter-spacing: 0.5px; }
+.contract-header p { margin: 3px 0 0 0; font-size: 11.5px; }
+.contract-section { margin-bottom: 26px; }
+.contract-section h3 { margin: 0 0 8px 0; border-bottom: 1px solid #000; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+.contract-section p, .contract-section td { font-size: 11.5px; }
+.con-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.con-table th, .con-table td { border: 1px solid #000; padding: 6px 8px; text-align: left; }
+.con-table th { background-color: #f2f2f2; font-size: 11px; }
+.con-table tr.selected-row { background-color: #f8fafc; }
+.signature-area { margin-top: 35px; display: flex; justify-content: space-between; }
+.sig-line { width: 45%; border-top: 1px solid #000; text-align: center; padding-top: 4px; font-size: 11px; }
+
+@media print { .no-print, header, .card, .step-tracker, .modal-header, .modal-footer, #modalArkiv { display: none !important; } body, html { background: #ffffff !important; margin: 0 !important; padding: 0 !important; } #modalPreview.modal-overlay { position: static !important; display: block !important; background: none !important; backdrop-filter: none !important; padding: 0 !important; } #modalPreview .modal-content { max-width: 100% !important; max-height: none !important; border: none !important; box-shadow: none !important; } #modalPreview .modal-body { background: white !important; padding: 0 !important; overflow: visible !important; } .contract-preview { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; background: #ffffff !important; font-size: 11pt; } @page { size: A4; margin: 1.4cm 1.5cm 1.4cm 1.5cm; } }
