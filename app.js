@@ -513,11 +513,20 @@ function beregnOrdinatTidFraTabell() {
 // ==========================================
 function apneSkoleModal() {
     lastInnSkoleProfil();
-    document.getElementById('modalSkole')?.classList.add('active');
+    const modal = document.getElementById('modalSkole');
+    if (modal) {
+        modal.classList.add('active');
+        modal.style.display = 'flex';
+        modal.style.zIndex = '2000';
+    }
 }
 
 function lukkSkoleModal() {
-    document.getElementById('modalSkole')?.classList.remove('active');
+    const modal = document.getElementById('modalSkole');
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+    }
 }
 
 function handterLogoOpplasting(event) {
