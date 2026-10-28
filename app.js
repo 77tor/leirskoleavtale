@@ -600,8 +600,11 @@ function lastInnSkoleProfil() {
 
     let profil = arkiv[skoleNavn];
 
-    // Hvis det er Hånes skoleenhet og ingen profil er lagret enda, bruk standard Hånes-data
-    if (!profil && skoleNavn.toLowerCase() === 'hånes skoleenhet') {
+    // Sjekk om skolenavnet matcher "Hånes skoleenhet" ELLER "Hånes skole"
+    const navnsjekk = skoleNavn.toLowerCase();
+    const erHanes = navnsjekk === 'hånes skoleenhet' || navnsjekk === 'hånes skole';
+
+    if (!profil && erHanes) {
         profil = standardHanesProfil;
     }
 
@@ -625,7 +628,11 @@ function oppdaterSkoleVisning() {
     } catch(e) { arkiv = {}; }
 
     let profil = arkiv[skoleNavn];
-    if (!profil && skoleNavn.toLowerCase() === 'hånes skoleenhet') {
+
+    const navnsjekk = skoleNavn.toLowerCase();
+    const erHanes = navnsjekk === 'hånes skoleenhet' || navnsjekk === 'hånes skole';
+
+    if (!profil && erHanes) {
         profil = standardHanesProfil;
     }
 
@@ -670,7 +677,6 @@ function oppdaterSkoleVisning() {
         if (logoPreviewContainer) logoPreviewContainer.style.display = 'none';
     }
 }
-
 
 
 // ==========================================
