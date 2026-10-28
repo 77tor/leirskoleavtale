@@ -21,7 +21,23 @@ p.subtitle { margin: 6px 0 0 0; opacity: 0.85; font-size: 13.5px; }
 .info-box { background: var(--input-fill); border: 1px solid var(--border); padding: 16px; border-radius: 8px; }
 .info-box h4 { margin: 0 0 6px 0; color: var(--primary); font-size: 14px; }
 .info-box p { margin: 0; font-size: 12.5px; color: var(--text-muted); }
-.start-actions { display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: 0 auto; }
+.start-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+.start-actions .btn {
+    flex: 1;
+    min-width: 200px;
+    max-width: 280px;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    white-space: nowrap;
+}
 button.btn-lg { padding: 14px 20px; font-size: 15px; width: 100%; }
 
 /* ==========================================================================
@@ -282,10 +298,7 @@ button.btn-save { background: #8b5cf6; }
 /* ==========================================================================
    10. OPTIMALISERING FOR LAPTOPER OG MINDRE SKJERMHØYDER
    ========================================================================== */
-
-/* Generell tilpassing for bærbare skjermer (13"-16" laptoper) */
 @media screen and (max-height: 900px) {
-    /* Container & spacing */
     .container {
         padding-top: 10px;
         padding-bottom: 10px;
@@ -293,8 +306,8 @@ button.btn-save { background: #8b5cf6; }
 
     /* Mørk topp-header */
     header.no-print {
-        padding: 12px 20px !important;
-        margin-bottom: 12px !important;
+        padding: 10px 20px !important;
+        margin-bottom: 10px !important;
         border-radius: 8px !important;
     }
     header.no-print h1 {
@@ -302,13 +315,19 @@ button.btn-save { background: #8b5cf6; }
         margin: 0 !important;
     }
     header.no-print .subtitle {
-        display: none !important; /* Skjuler undertittel for å spare vertikal plass */
+        font-size: 11px !important;
+        margin-top: 3px !important;
+    }
+
+    /* Skjuler undertittelen KUN på steg 1–4 på laptop */
+    header.no-print.hide-subtitle-laptop .subtitle {
+        display: none !important;
     }
 
     /* Steg-indikator */
     .step-tracker {
-        margin-bottom: 12px !important;
-        padding: 6px 12px !important;
+        margin-bottom: 10px !important;
+        padding: 5px 12px !important;
     }
     .step-item {
         padding: 4px 8px !important;
@@ -324,12 +343,32 @@ button.btn-save { background: #8b5cf6; }
 
     /* Hovedkortene / Form steps */
     .card {
-        padding: 16px 22px !important;
-        margin-bottom: 10px !important;
+        padding: 16px 20px !important;
+        margin-bottom: 8px !important;
     }
     .card h2 {
         font-size: 16px !important;
         margin-bottom: 12px !important;
+    }
+
+    /* Steg 0 kort-spesifikk */
+    .start-card h2 {
+        font-size: 18px !important;
+        margin-bottom: 8px !important;
+    }
+    .start-info-grid {
+        margin-bottom: 12px !important;
+    }
+    .info-box {
+        padding: 10px 14px !important;
+    }
+    .info-box h4 {
+        font-size: 13px !important;
+        margin-bottom: 4px !important;
+    }
+    .info-box p {
+        font-size: 11.5px !important;
+        line-height: 1.35 !important;
     }
 
     /* Skjemagrid & Inndata */

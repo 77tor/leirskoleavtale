@@ -19,8 +19,20 @@ function gaaTilSteg(stegNummer) {
         }
     });
 
+    // Styr undertittelen i headeren: Vis full versjon på steg 0, skjul undertittel på steg 1–4 på laptop
+    const header = document.querySelector('header.no-print');
+    if (header) {
+        if (stegNummer === 0) {
+            header.classList.remove('hide-subtitle-laptop');
+        } else {
+            header.classList.add('hide-subtitle-laptop');
+        }
+    }
+
     if (stegNummer === 0) {
         oppdaterStartsideKnapper();
+    } else if (stegNummer === 3 || stegNummer === 4) {
+        beregnAlt();
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
