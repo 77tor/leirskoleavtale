@@ -507,6 +507,94 @@ function beregnOrdinatTidFraTabell() {
     return totalOrdinatTid;
 }
 
+// ==========================================
+// SKOLEPROFIL OG LOGO LOGIKK
+// ==========================================
+function apneSkoleModal() {
+    document.getElementById('modalSkole')?.classList.add('active');
+}
+
+function lukkSkoleModal() {
+    document.getElementById('modalSkole')?.classList.remove('active');
+}
+
+function handterLogoOpplasting(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const base64Image = e.target.result;
+        localStorage.setItem('leirskole_logo', base64Image);
+        oppdaterSkoleVisning();
+    };
+    reader.readAsDataURL(file);
+}
+
+function fjernLogo() {
+    localStorage.removeItem('leirskole_logo');
+    const input = document.getElementById('skoleLogoInput');
+    if (input) input.value = '';
+    oppdaterSkoleVisning();
+}
+
+function lagreSkoleProfil() {
+    const profil = {
+        adresse: document.getElementById('skoleAdresseInput')?.value || '',
+        org: document.getElementById('skoleOrgInput')?.value || '',
+        kontakt: document.getElementById('skoleKontaktInput')?.value || ''
+    };
+    localStorage.setItem('leirskole_skoleprofil', JSON.stringify(profil));
+    oppdaterSkoleVisning();
+}
+
+function lastInnSkoleProfil() {
+    try {
+        const profil = JSON.parse(localStorage.getItem('leirskole_skoleprofil'));
+        if (profil) {
+            if (document.getElementById('skoleAdresseInput')) document.getElementById('skoleAdresseInput').value = profil.adresse || '';
+            if (document.getElementById('skoleOrgInput')) document.getElementById('skoleOrgInput').value = profil.org || '';
+            if (document.getElementById('skoleKontaktInput')) document.getElementById('skoleKontaktInput').value = profil.kontakt || '';
+        }
+    } catch(e) {}
+    oppdaterSkoleVisning();
+}
+
+function oppdaterSkoleVisning() {
+    const skoleNavn = document.getElementById('skoleNavn')?.value || 'Skole/Virksomhet';
+    const profil = JSON.parse(localStorage.getItem('leirskole_skoleprofil') || '{}');
+    const logoBase64 = localStorage.getItem('leirskole_logo');
+
+    // Oppdater bunntekst
+    const conFooterSkole = document.getElementById('conFooterSkole');
+    if (conFooterSkole) conFooterSkole.innerText = skoleNavn;
+    
+    const conFooterOrg = document.getElementById('conFooterOrg');
+    if (conFooterOrg) conFooterOrg.innerText = profil.org ? `(${profil.org})` : '';
+
+    const conFooterAdresse = document.getElementById('conFooterAdresse');
+    if (conFooterAdresse) conFooterAdresse.innerText = profil.adresse || '';
+
+    const conFooterKontakt = document.getElementById('conFooterKontakt');
+    if (conFooterKontakt) conFooterKontakt.innerText = profil.kontakt || '';
+
+    // Oppdater logo visning
+    const conLogoVisning = document.getElementById('conLogoVisning');
+    const conLogoImg = document.getElementById('conLogoImg');
+    const logoPreviewContainer = document.getElementById('logoPreviewContainer');
+    const logoPreviewImg = document.getElementById('logoPreviewImg');
+
+    if (logoBase64) {
+        if (conLogoImg) conLogoImg.src = logoBase64;
+        if (conLogoVisning) conLogoVisning.style.display = 'block';
+        if (logoPreviewImg) logoPreviewImg.src = logoBase64;
+        if (logoPreviewContainer) logoPreviewContainer.style.display = 'flex';
+    } else {
+        if (conLogoVisning) conLogoVisning.style.display = 'none';
+        if (logoPreviewContainer) logoPreviewContainer.style.display = 'none';
+    }
+}
+
 function beregnAlt() {
     lagreAktivTilStorage();
     
