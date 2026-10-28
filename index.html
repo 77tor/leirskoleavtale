@@ -213,12 +213,14 @@
                 <div class="result-row total"><span>Netto plusstimer opparbeidet:</span><span id="resNettoTimerVisning">0 timer</span></div>
             </div>
 
-            <div class="nav-buttons">
-                <button type="button" class="btn btn-secondary" onclick="forrigeSteg()">⬅ Tilbake</button>
-                <div class="btn-group-inline">
+            <div class="nav-buttons step-4-nav">
+                <div class="btn-group-left">
+                    <button type="button" class="btn btn-secondary" onclick="forrigeSteg()">⬅ Tilbake</button>
                     <button type="button" class="btn btn-secondary" onclick="gaaTilSteg(0)">🏠 Tilbake til start</button>
-                    <button type="button" class="btn btn-save" onclick="lagreOgStartNy()">💾 Lagre & Ny avtale</button>
-                    <button type="button" class="btn btn-primary" onclick="apneModal()">📄 Forhåndsvis avtale</button>
+                </div>
+                <div class="btn-group-right">
+                    <button type="button" class="btn btn-green" onclick="lagreOgStartNy()">💾 Lagre & Ny avtale</button>
+                    <button type="button" class="btn btn-primary btn-hero" onclick="apneModal()">📄 Forhåndsvis avtale & skriv ut</button>
                 </div>
             </div>
         </div>

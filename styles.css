@@ -97,6 +97,45 @@ button.btn-save { background: #8b5cf6; }
 .btn-danger-subtle { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 .btn-danger-subtle:hover { background: #fecaca; }
 
+/* Spesifikk navigasjon for Steg 4 */
+.step-4-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn-group-left, .btn-group-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Grønn knapp for "Lagre & Ny avtale" */
+.btn-green {
+    background-color: #16a34a;
+    color: #ffffff;
+    border: none;
+}
+.btn-green:hover {
+    background-color: #15803d;
+}
+
+/* Stor fremhevet knapp for forhåndsvisning */
+.btn-hero {
+    padding: 14px 22px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    line-height: 1.2;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.btn-hero:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
 
 /* ==========================================================================
    8. MODALER (PREVIEW, ARKIV OG SKOLEPROFIL)
