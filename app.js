@@ -682,7 +682,6 @@ function oppdaterSkoleVisning() {
 // ==========================================
 // SKOLEPROFIL SLUTT
 // ==========================================
-
 function beregnAlt() {
     lagreAktivTilStorage();
     
@@ -712,24 +711,62 @@ function beregnAlt() {
 
     document.getElementById('conOrdinar').innerText = ordinarTid.toFixed(1);
     
+    // HVIS TIDSROM MANGLER: FULLSTENDIG NULLSTILLING AV ALLE BEREGNEDE VISNINGSFFELTER
     if (!startInputStr || !sluttInputStr) {
-        document.getElementById('resVarighet').innerText = "-";
-        document.getElementById('resDognSum').innerText = "0,-";
-        document.getElementById('resNettoTimerVisning').innerText = "0 timer";
-        document.getElementById('conVarighet').innerText = "-";
-        document.getElementById('conStart').innerText = "-";
-        document.getElementById('conSlutt').innerText = "-";
-        document.getElementById('conDognBeregning').innerText = "-";
-        document.getElementById('conDognTotal').innerText = "0";
-        document.getElementById('conGodskrevet').innerText = "0.0";
-        document.getElementById('conNetto').innerText = "0.0";
+        // Hovedoppsummering i skjema
+        if (document.getElementById('resVarighet')) document.getElementById('resVarighet').innerText = "-";
+        if (document.getElementById('resDognSum')) document.getElementById('resDognSum').innerText = "0,-";
+        if (document.getElementById('resNettoTimerVisning')) document.getElementById('resNettoTimerVisning').innerText = "0 timer";
+
+        // Kontrakt / Forhåndsvisningsfelter
+        if (document.getElementById('conVarighet')) document.getElementById('conVarighet').innerText = "-";
+        if (document.getElementById('conStart')) document.getElementById('conStart').innerText = "-";
+        if (document.getElementById('conSlutt')) document.getElementById('conSlutt').innerText = "-";
+        if (document.getElementById('conDognBeregning')) document.getElementById('conDognBeregning').innerText = "-";
+        if (document.getElementById('conDognTotal')) document.getElementById('conDognTotal').innerText = "0";
+        if (document.getElementById('conGodskrevet')) document.getElementById('conGodskrevet').innerText = "0.0";
+        if (document.getElementById('conNetto')) document.getElementById('conNetto').innerText = "0.0";
+
+        // STEG 4: ALT. 1 (KORT OG TABELL)
+        if (document.getElementById('mAlt1Lonn')) document.getElementById('mAlt1Lonn').innerText = "0";
+        if (document.getElementById('mAlt1Timer')) document.getElementById('mAlt1Timer').innerText = "0";
+        if (document.getElementById('tAlt1Lonn')) document.getElementById('tAlt1Lonn').innerText = "0";
+        if (document.getElementById('tAlt1Timer')) document.getElementById('tAlt1Timer').innerText = "0";
+
+        // STEG 4: ALT. 2 (KORT OG TABELL)
+        if (document.getElementById('mAlt2Total')) document.getElementById('mAlt2Total').innerText = "0";
+        if (document.getElementById('mAlt2Sats')) document.getElementById('mAlt2Sats').innerText = "0";
+        if (document.getElementById('mAlt2Overtid')) document.getElementById('mAlt2Overtid').innerText = "0";
+        if (document.getElementById('tAlt2Total')) document.getElementById('tAlt2Total').innerText = "0";
+        if (document.getElementById('tAlt2Sats')) document.getElementById('tAlt2Sats').innerText = "0";
+        if (document.getElementById('tAlt2Overtid')) document.getElementById('tAlt2Overtid').innerText = "0";
+
+        // STEG 4: ALT. 3 (KORT OG TABELL)
+        if (document.getElementById('mAlt3SamletDager')) document.getElementById('mAlt3SamletDager').innerText = "0";
+        if (document.getElementById('mAlt3DagerVis')) document.getElementById('mAlt3DagerVis').innerText = "0";
+        if (document.getElementById('mAlt3TimerOmregnetVis')) document.getElementById('mAlt3TimerOmregnetVis').innerText = "0";
+        if (document.getElementById('mAlt3TilleggKroner')) document.getElementById('mAlt3TilleggKroner').innerText = "0";
+        if (document.getElementById('tAlt3SamletSamling')) document.getElementById('tAlt3SamletSamling').innerText = "0";
+        if (document.getElementById('tAlt3DagerVis')) document.getElementById('tAlt3DagerVis').innerText = "0";
+        if (document.getElementById('tAlt3TimerOmregnetVis')) document.getElementById('tAlt3TimerOmregnetVis').innerText = "0";
+        
+        const mAlt3Tillegg = document.getElementById('mAlt3TilleggTekst');
+        if (mAlt3Tillegg) mAlt3Tillegg.style.display = 'none';
+
+        const bTillegg = document.getElementById('tAlt3TilleggBoks');
+        if (bTillegg) bTillegg.style.display = 'none';
+        
+        const tAlt3LonnTekst = document.getElementById('tAlt3LonnTekst');
+        if (tAlt3LonnTekst) tAlt3LonnTekst.innerText = "Ingen utbetaling.";
+
+        oppdaterStartsideKnapper();
         return;
     }
 
     const start = new Date(startInputStr);
     const slutt = new Date(sluttInputStr);
     const diffMs = slutt - start;
-    if(diffMs <= 0 || isNaN(diffMs)) return;
+    if (diffMs <= 0 || isNaN(diffMs)) return;
 
     const totalTimer = diffMs / (1000 * 60 * 60);
     const heleDogn = Math.floor(totalTimer / 24);
@@ -804,7 +841,7 @@ function beregnAlt() {
     const antallAvspaseringsdagerFraDognsats = kostnadPerFridag > 0 ? (totalDognKronsum / kostnadPerFridag) : 0;
 
     let totalGodskrevet = 0;
-    if(turType==='eks1'||turType==='eks2') { 
+    if (turType === 'eks1' || turType === 'eks2') { 
         totalGodskrevet = faktiskTid; 
     } else { 
         totalGodskrevet = (heleDogn * sjablongDogn) + ((restTimer / 24) * sjablongDogn); 
@@ -865,7 +902,7 @@ function beregnAlt() {
     document.getElementById('tAlt3DagerVis').innerText = antallAvspaseringsdagerFraDognsats.toFixed(2);
     document.getElementById('tAlt3TimerOmregnetVis').innerText = fridagerFraPlusstimer.toFixed(2);
 
-const bTillegg = document.getElementById('tAlt3TilleggBoks');
+    const bTillegg = document.getElementById('tAlt3TilleggBoks');
     if (stillingsType === '100' && nettoTimer > 0 && arslonn > 0) {
         if (bTillegg) bTillegg.style.display = 'block';
         document.getElementById('tAlt3TilleggKroner').innerText = Math.round(kroneKunTillegg).toLocaleString('no-NO');
@@ -875,7 +912,6 @@ const bTillegg = document.getElementById('tAlt3TilleggBoks');
         document.getElementById('tAlt3LonnTekst').innerText = "Ingen utbetaling.";
     }
 
-    // LEGG TIL DENNE FOR Å OPPDATERE KNAPPENE PÅ STARTSIDEN DYNAMISK
     oppdaterStartsideKnapper();
 }
 
