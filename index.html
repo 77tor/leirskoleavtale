@@ -234,114 +234,119 @@
         </div>
         <div class="modal-body">
             <div class="contract-preview" id="contract-document">
-                <!-- LOGO OG HEADER -->
-                <div class="contract-top-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #2563eb; padding-bottom: 12px;">
-                    <div id="conLogoVisning" style="max-width: 140px; max-height: 50px; display: none;">
-                        <img id="conLogoImg" src="" alt="Skolelogo" style="max-width: 100%; max-height: 50px; object-fit: contain;">
+                
+                <!-- MIDTSTILT HEADER -->
+                <div class="contract-header">
+                    <h2>Særavtale / Arbeidsplan</h2>
+                    <p>for overnattingsturer jfr. SGS 1010, SFS 2213 & AML (Satsår: <span id="conGjelderAar">-</span>)</p>
+                </div>
+
+                <!-- HOVEDINNHOLD (DYTTER BUNNTEKSTEN NED) -->
+                <div class="contract-body">
+                    <div class="contract-section">
+                        <h3>1. Stillingsforhold</h3>
+                        <div class="contract-grid">
+                            <div><strong>Arbeidsgiver:</strong> <span id="conSkole">Hånes skoleenhet</span></div>
+                            <div><strong>Stilling:</strong> <span id="conStilling">-</span></div>
+                            <div><strong>Ansatt:</strong> <span id="conNavn">-</span></div>
+                            <div><strong>Årslønn:</strong> <span id="conArslonn">-</span></div>
+                        </div>
                     </div>
-                    <div class="contract-header" style="border: none; margin: 0; padding: 0; text-align: right; flex-grow: 1;">
-                        <h2 style="margin: 0; font-size: 18px;">Særavtale / Arbeidsplan</h2>
-                        <p style="margin: 2px 0 0 0;">for overnattingsturer jfr. SGS 1010, SFS 2213 & AML (Satsår: <span id="conGjelderAar">-</span>)</p>
+
+                    <div class="contract-section">
+                        <h3>2. Reisens omfang og tidsregnskap</h3>
+                        <div class="contract-grid">
+                            <div class="contract-grid-full"><strong>Kategori:</strong> <span id="conType">-</span></div>
+                            <div class="contract-grid-full"><strong>Tidsrom:</strong> Fra <span id="conStart">-</span> til <span id="conSlutt">-</span> (<span id="conVarighet">-</span>)</div>
+                            <div class="contract-grid-full"><strong>Timeberegning:</strong> Bortfalt tid: <strong><span id="conOrdinar">-</span> t</strong> | Godskrevet/faktisk tid: <strong><span id="conGodskrevet">-</span> t</strong></div>
+                            <div><strong>Netto timeavstemming:</strong> <strong><span id="conNetto">-</span> plusstimer</strong></div>
+                            <div><strong>Døgngodtgjørelse:</strong> <span id="conDognBeregning">-</span> = <strong>kr <span id="conDognTotal">-</span></strong></div>
+                        </div>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>3. Sluttbehandlingsalternativer (Valgt oppgjør er merket)</h3>
+                        <p style="margin: 0 0 6px 0; font-size: 10.5px; color: #64748b;">Partene velger herved én av følgende samlede oppgjørsmodeller for turen:</p>
+                        
+                        <table class="con-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; text-align:center;">Status</th>
+                                    <th style="width: 20%;">Modell</th>
+                                    <th style="width: 35%;">Økonomisk oppgjør</th>
+                                    <th style="width: 35%;">Avspasering / Tidskonto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="rowAlt1">
+                                    <td style="text-align:center; vertical-align: middle;"><span class="badge-check" id="chkAlt1">Valgt</span></td>
+                                    <td><strong>Alt. 1</strong><br><small style="color:#64748b;">Lønn + tid</small></td>
+                                    <td>Døgngodtgjørelse utbetales:<br><strong>kr <span id="tAlt1Lonn">-</span></strong></td>
+                                    <td>Netto plusstimer overføres 1:1:<br><strong><span id="tAlt1Timer">-</span> timer</strong></td>
+                                </tr>
+                                <tr id="rowAlt2">
+                                    <td style="text-align:center; vertical-align: middle;"><span class="badge-check" id="chkAlt2">–</span></td>
+                                    <td><strong>Alt. 2</strong><br><small style="color:#64748b;">Alt i lønn</small></td>
+                                    <td>Døgngodtgjørelse + plusstimer utbetales:<br><span style="font-size:10px; color:#64748b;">Sats: kr <span id="tAlt2Sats">-</span> + Overtid: kr <span id="tAlt2Overtid">-</span></span><br><strong>Totalt brutto: kr <span id="tAlt2Total">-</span></strong></td>
+                                    <td>Ingen timer til tidskonto.<br><small style="font-style:italic; color:#94a3b8;">(Alt utbetales)</small></td>
+                                </tr>
+                                <tr id="rowAlt3">
+                                    <td style="text-align:center; vertical-align: middle;"><span class="badge-check" id="chkAlt3">–</span></td>
+                                    <td><strong>Alt. 3</strong><br><small style="color:#64748b;">Alt til fritid</small></td>
+                                    <td>
+                                        <span id="tAlt3LonnTekst">Døgngodtgjørelse avspaseres.</span>
+                                        <div id="tAlt3TilleggBoks" style="display:none; margin-top:3px; border-top:1px dashed #cbd5e1; padding-top:2px;">
+                                            Utbetalt 50% overtidstillegg:<br><strong style="color:#2563eb;">kr <span id="tAlt3TilleggKroner">-</span></strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <strong>Samlet tidsavstemming:</strong><br>
+                                        • Total fritid: <strong><span id="tAlt3SamletSamling">-</span> fridager</strong><br>
+                                        <span style="font-size:9.5px; color:#64748b;">
+                                            (<span id="tAlt3DagerVis">-</span> dager fra døgngodt + <span id="tAlt3TimerOmregnetVis">-</span> dager fra plusstimer)
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="font-size: 9.5px; font-style: italic; color: #94a3b8; margin: 6px 0 0 0;">
+                            *Omregning til fridager skjer iht. SFS 2213 basert på en vektet skoledag bestående av undervisning (741/190) og tilstedeværelse (506,5/190).
+                        </p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>4. Godkjenning og Signatur</h3>
+                        <p style="font-size: 9.5px; text-align: justify; color: #64748b; margin: 0 0 20px 0; line-height: 1.4;">
+                            Avtalen er bindende og opprettet i samsvar med SGS 1010, SFS 2213 og Hovedtariffavtalen. Uttak av oppsparte plusstimer og omregnede fridager skal godkjennes av rektor og avvikles slik at det ikke hindrer skolens forsvarlige drift.
+                        </p>
+                        <div class="signature-area">
+                            <div class="sig-line">Dato / Sted</div>
+                            <div class="sig-line">Dato / Sted</div>
+                        </div>
+                        <div class="signature-area" style="margin-top: 25px;">
+                            <div class="sig-line">For arbeidsgiver (Rektor/Leder)</div>
+                            <div class="sig-line">Ansattes signatur</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="contract-section">
-                    <h3>1. Stillingsforhold</h3>
-                    <div class="contract-grid">
-                        <div><strong>Arbeidsgiver:</strong> <span id="conSkole">Hånes skoleenhet</span></div>
-                        <div><strong>Stilling:</strong> <span id="conStilling">-</span></div>
-                        <div><strong>Ansatt:</strong> <span id="conNavn">-</span></div>
-                        <div><strong>Årslønn:</strong> <span id="conArslonn">-</span></div>
-                    </div>
-                </div>
-
-                <div class="contract-section">
-                    <h3>2. Reisens omfang og tidsregnskap</h3>
-                    <div class="contract-grid">
-                        <div class="contract-grid-full"><strong>Kategori:</strong> <span id="conType">-</span></div>
-                        <div class="contract-grid-full"><strong>Tidsrom:</strong> Fra <span id="conStart">-</span> til <span id="conSlutt">-</span> (<span id="conVarighet">-</span>)</div>
-                        <div class="contract-grid-full"><strong>Timeberegning:</strong> Bortfalt tid: <strong><span id="conOrdinar">-</span> t</strong> | Godskrevet/faktisk tid: <strong><span id="conGodskrevet">-</span> t</strong></div>
-                        <div><strong>Netto timeavstemming:</strong> <strong><span id="conNetto">-</span> plusstimer</strong></div>
-                        <div><strong>Døgngodtgjørelse:</strong> <span id="conDognBeregning">-</span> = <strong>kr <span id="conDognTotal">-</span></strong></div>
-                    </div>
-                </div>
-
-                <div class="contract-section">
-                    <h3>3. Sluttbehandlingsalternativer (Valgt oppgjør er merket)</h3>
-                    <p style="margin: 0 0 6px 0; font-size: 10.5px; color: #64748b;">Partene velger herved én av følgende samlede oppgjørsmodeller for turen:</p>
-                    
-                    <table class="con-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 10%; text-align:center;">Status</th>
-                                <th style="width: 20%;">Modell</th>
-                                <th style="width: 35%;">Økonomisk oppgjør</th>
-                                <th style="width: 35%;">Avspasering / Tidskonto</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr id="rowAlt1">
-                                <td style="text-align:center; vertical-align: middle;"><span class="badge-check" id="chkAlt1">Valgt</span></td>
-                                <td><strong>Alt. 1</strong><br><small style="color:#64748b;">Lønn + tid</small></td>
-                                <td>Døgngodtgjørelse utbetales:<br><strong>kr <span id="tAlt1Lonn">-</span></strong></td>
-                                <td>Netto plusstimer overføres 1:1:<br><strong><span id="tAlt1Timer">-</span> timer</strong></td>
-                            </tr>
-                            <tr id="rowAlt2">
-                                <td style="text-align:center; vertical-align: middle;"><span class="badge-check" id="chkAlt2">–</span></td>
-                                <td><strong>Alt. 2</strong><br><small style="color:#64748b;">Alt i lønn</small></td>
-                                <td>Døgngodtgjørelse + plusstimer utbetales:<br><span style="font-size:10px; color:#64748b;">Sats: kr <span id="tAlt2Sats">-</span> + Overtid: kr <span id="tAlt2Overtid">-</span></span><br><strong>Totalt brutto: kr <span id="tAlt2Total">-</span></strong></td>
-                                <td>Ingen timer til tidskonto.<br><small style="font-style:italic; color:#94a3b8;">(Alt utbetales)</small></td>
-                            </tr>
-                            <tr id="rowAlt3">
-                                <td style="text-align:center; vertical-align: middle;"><span class="badge-check" id="chkAlt3">–</span></td>
-                                <td><strong>Alt. 3</strong><br><small style="color:#64748b;">Alt til fritid</small></td>
-                                <td>
-                                    <span id="tAlt3LonnTekst">Døgngodtgjørelse avspaseres.</span>
-                                    <div id="tAlt3TilleggBoks" style="display:none; margin-top:3px; border-top:1px dashed #cbd5e1; padding-top:2px;">
-                                        Utbetalt 50% overtidstillegg:<br><strong style="color:#2563eb;">kr <span id="tAlt3TilleggKroner">-</span></strong>
-                                    </div>
-                                </td>
-                                <td>
-                                    <strong>Samlet tidsavstemming:</strong><br>
-                                    • Total fritid: <strong><span id="tAlt3SamletSamling">-</span> fridager</strong><br>
-                                    <span style="font-size:9.5px; color:#64748b;">
-                                        (<span id="tAlt3DagerVis">-</span> dager fra døgngodt + <span id="tAlt3TimerOmregnetVis">-</span> dager fra plusstimer)
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p style="font-size: 9.5px; font-style: italic; color: #94a3b8; margin: 6px 0 0 0;">
-                        *Omregning til fridager skjer iht. SFS 2213 basert på en vektet skoledag bestående av undervisning (741/190) og tilstedeværelse (506,5/190).
-                    </p>
-                </div>
-
-                <div class="contract-section">
-                    <h3>4. Godkjenning og Signatur</h3>
-                    <p style="font-size: 9.5px; text-align: justify; color: #64748b; margin: 0 0 20px 0; line-height: 1.4;">
-                        Avtalen er bindende og opprettet i samsvar med SGS 1010, SFS 2213 og Hovedtariffavtalen. Uttak av oppsparte plusstimer og omregnede fridager skal godkjennes av rektor og avvikles slik at det ikke hindrer skolens forsvarlige drift.
-                    </p>
-                    <div class="signature-area">
-                        <div class="sig-line">Dato / Sted</div>
-                        <div class="sig-line">Dato / Sted</div>
-                    </div>
-                    <div class="signature-area" style="margin-top: 25px;">
-                        <div class="sig-line">For arbeidsgiver (Rektor/Leder)</div>
-                        <div class="sig-line">Ansattes signatur</div>
-                    </div>
-                </div>
-
-                <!-- BUNNTEKST PÅ KONTRAKTEN -->
+                <!-- BUNNTEKST PÅ KONTRAKTEN MED LOGO FORANKRET I BUNN -->
                 <div class="contract-footer" id="contractFooter">
-                    <div>
-                        <strong id="conFooterSkole">Hånes skoleenhet</strong> <span id="conFooterOrg"></span><br>
-                        <span id="conFooterAdresse"></span>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div id="conLogoVisning" style="max-width: 100px; max-height: 45px; display: none;">
+                            <img id="conLogoImg" src="" alt="Skolelogo" style="max-width: 100%; max-height: 45px; object-fit: contain;">
+                        </div>
+                        <div>
+                            <strong id="conFooterSkole">Hånes skoleenhet</strong> <span id="conFooterOrg" style="font-size: 8pt; color: #64748b;"></span><br>
+                            <span id="conFooterAdresse" style="font-size: 8pt;"></span>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
+                    <div style="text-align: right; font-size: 8pt;">
                         <span id="conFooterKontakt"></span><br>
-                        <span>Generert via SGS 1010 Beregningsverktøy</span>
+                        <span style="color: #94a3b8;">Generert via SGS 1010 Beregningsverktøy</span>
                     </div>
                 </div>
+
             </div>
         </div>
         <div class="modal-footer no-print">
