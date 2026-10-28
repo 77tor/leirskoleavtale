@@ -4,6 +4,97 @@ let aktivtSteg = 0;
 // ==========================================
 // 1. STEG-NAVIGASJON & STARTLOGIKK
 // ==========================================
+
+// Global variabel for å holde styr på om avtalen er lagret/skrevet ut på steg 4
+let isSteg4Completed = false;
+
+// Hjelpefunksjon for å sjekke om steg 1, 2 og 3 er komplett utfylt
+function erGrunnlagsdataFullstendig() {
+    const skole = document.getElementById('skoleNavn')?.value.trim();
+    const ansatt = document.getElementById('ansattNavn')?.value.trim();
+    const arslonnRaw = document.getElementById('arslonn')?.value.trim();
+    const arslonn = parseFloat(arslonnRaw?.replace(/\s/g, '')) || 0;
+    const steg1OK = !!(skole && ansatt && arslonn > 0);
+
+    const startTid = document.getElementById('startTid')?.value;
+    const sluttTid = document.getElementById('sluttTid')?.value;
+    const steg2og3OK = !!(startTid && sluttTid);
+
+    return steg1OK && steg2og3OK;
+}
+
+// Sjekker om kriteriene for et gitt steg er 100% oppfylt
+function sjekkStegFullfoert(stegNummer) {
+    const skole = document.getElementById('skoleNavn')?.value.trim();
+    const ansatt = document.getElementById('ansattNavn')?.value.trim();
+    const arslonnRaw = document.getElementById('arslonn')?.value.trim();
+    const arslonn = parseFloat(arslonnRaw?.replace(/\s/g, '')) || 0;
+    const steg1OK = !!(skole && ansatt && arslonn > 0);
+
+    const startTid = document.getElementById('startTid')?.value;
+    const sluttTid = document.getElementById('sluttTid')?.value;
+    const steg2og3OK = !!(startTid && sluttTid);
+
+    switch (stegNummer) {
+        case 1:
+            return steg1OK;
+
+        case 2:
+        case 3:
+            return steg2og3OK;
+
+        case 4:
+            // Steg 4 er KUN fullført (grønn) dersom grunnlaget er OK OG det er lagret/skrevet ut
+            return erGrunnlagsdataFullstendig() && isSteg4Completed;
+
+        default:
+            return false;
+    }
+}
+
+
+// Oppdaterer farge på indikator-ringene (Grønn vs Oransje)
+function oppdaterStegIndikatorer(aktuellSteg) {
+    const stepItems = document.querySelectorAll('.step-item');
+    
+    stepItems.forEach((item, index) => {
+        // Start-knappen (index 0)
+        if (index === 0) {
+            item.classList.remove('active', 'completed', 'warning');
+            if (aktuellSteg === 0) {
+                item.classList.add('active');
+            } else {
+                item.classList.add('completed');
+            }
+            return;
+        }
+
+        const stegNr = index; // 1, 2, 3 eller 4
+        const erFullfoert = sjekkStegFullfoert(stegNr);
+
+        // Nullstill alle status- og aktiv-klasser
+        item.classList.remove('active', 'completed', 'warning');
+
+        if (stegNr === aktuellSteg) {
+            // NÅVÆRENDE STEG: Vis blå farge (active)
+            item.classList.add('active');
+            
+            // Hvis det nåværende steget allerede er fullstendig utfylt, kan det også få grønn farge
+            if (erFullfoert) {
+                item.classList.add('completed');
+            }
+        } else if (stegNr < aktuellSteg) {
+            // PASSERTE STEG: Vis grønn hvis alt er fylt ut, eller oransje hvis du har hoppet over felter
+            if (erFullfoert) {
+                item.classList.add('completed'); // Grønn
+            } else {
+                item.classList.add('warning');   // Oransje
+            }
+        }
+        // FREMTIDIGE STEG (stegNr > aktuellSteg): Beholder nøytral/grå farge uten klasser!
+    });
+}
+
 function gaaTilSteg(stegNummer) {
     if (stegNummer < 0 || stegNummer > 4) return;
     aktivtSteg = stegNummer;
@@ -19,7 +110,8 @@ function gaaTilSteg(stegNummer) {
         }
     });
 
-    // Styr undertittelen i headeren: Vis full versjon på steg 0, skjul undertittel på steg 1–4 på laptop
+    oppdaterStegIndikatorer(stegNummer);
+
     const header = document.querySelector('header.no-print');
     if (header) {
         if (stegNummer === 0) {
@@ -41,13 +133,32 @@ function gaaTilSteg(stegNummer) {
 function nesteSteg() { gaaTilSteg(aktivtSteg + 1); }
 function forrigeSteg() { gaaTilSteg(aktivtSteg - 1); }
 
+// Nullstiller godkjenningen på steg 4 dersom brukeren endrer/fyller ut verdier i ettertid
+function nullstillSteg4Fullfoering() {
+    if (isSteg4Completed) {
+        isSteg4Completed = false;
+        oppdaterStegIndikatorer(aktivtSteg);
+    }
+}
+
+// Lytter på utskrift – krever at grunnlaget var i orden
+window.addEventListener('afterprint', () => {
+    isSteg4Completed = erGrunnlagsdataFullstendig();
+    oppdaterStegIndikatorer(aktivtSteg);
+});
+
+// Funksjon for lagring – krever at grunnlaget var i orden
+function markerSteg4SomLagret() {
+    isSteg4Completed = erGrunnlagsdataFullstendig();
+    oppdaterStegIndikatorer(aktivtSteg);
+}
+
 function erSkjemaUtfylt() {
     const ansatt = document.getElementById('ansattNavn')?.value.trim();
     const arslonn = document.getElementById('arslonn')?.value.trim();
     const start = document.getElementById('startTid')?.value;
     const slutt = document.getElementById('sluttTid')?.value;
     
-    // Sjekk om det finnes et lagret utkast i localStorage som har navn, lønn eller dato
     let harLagretUtkast = false;
     try {
         const utkastStr = localStorage.getItem('leirskole_siste_utkast');
@@ -83,27 +194,31 @@ function startNyAvtale() {
         if (!bekreft) return;
     }
     
-    // 1. Tøm alle felter
-    document.getElementById('ansattNavn').value = '';
-    document.getElementById('arslonn').value = '';
-    document.getElementById('startTid').value = '';
-    document.getElementById('sluttTid').value = '';
-    document.getElementById('faktiskTid').value = '0';
-    document.getElementById('stillingsprosent').value = '100';
-    document.getElementById('turType').value = 'eks3';
+    // 1. Nullstill status for Steg 4
+    isSteg4Completed = false;
     
-    // 2. Tøm timeplan
+    // 2. Tøm alle innfylte feltverdier i skjemaet
+    if (document.getElementById('skoleNavn')) document.getElementById('skoleNavn').value = '';
+    if (document.getElementById('ansattNavn')) document.getElementById('ansattNavn').value = '';
+    if (document.getElementById('arslonn')) document.getElementById('arslonn').value = '';
+    if (document.getElementById('startTid')) document.getElementById('startTid').value = '';
+    if (document.getElementById('sluttTid')) document.getElementById('sluttTid').value = '';
+    if (document.getElementById('faktiskTid')) document.getElementById('faktiskTid').value = '0';
+    if (document.getElementById('stillingsprosent')) document.getElementById('stillingsprosent').value = '100';
+    if (document.getElementById('turType')) document.getElementById('turType').value = 'eks3';
+    
+    // 3. Tøm timeplan-tabellen
     const tbody = document.getElementById('dagerTbody');
     if (tbody) tbody.innerHTML = '';
 
-    // 3. Slett lagret utkast
+    // 4. Slett lagret utkast fra minnet
     localStorage.removeItem('leirskole_siste_utkast');
     
-    // 4. Oppdater grensesnitt, knapper og beregninger
-    toggleTurTypeFields();
+    // 5. Oppdater felter og rekalkuler
+    if (typeof toggleTurTypeFields === 'function') toggleTurTypeFields();
     beregnAlt();
 
-    // 5. Gå til Steg 1
+    // 6. Naviger direkte til Steg 1
     gaaTilSteg(1);
 }
 
@@ -150,7 +265,6 @@ function hentSkjemaData() {
     };
 }
 
-// LAGRINGSMODAL OG OVERSKRIVING LOGIKK
 function apneLagreModal(ettersagringAksjon = null) {
     aksjonEtterLagring = ettersagringAksjon;
     const ansatt = document.getElementById('ansattNavn').value.trim() || 'Uten navn';
@@ -219,26 +333,30 @@ function bekreftLagringIArkiv() {
     }
 
     localStorage.setItem('leirskole_arkiv', JSON.stringify(arkiv));
+    
+    // Marker Steg 4 som fullført KUN dersom grunnlagsdataene er OK
+    markerSteg4SomLagret();
+
     lukkLagreModal();
 
     if (aksjonEtterLagring === 'ny') {
-        // Tøm alle tekst- og datofelter
-        document.getElementById('ansattNavn').value = '';
-        document.getElementById('arslonn').value = '';
-        document.getElementById('startTid').value = '';
-        document.getElementById('sluttTid').value = '';
-        document.getElementById('faktiskTid').value = '0';
-        document.getElementById('stillingsprosent').value = '100';
-        document.getElementById('turType').value = 'eks3';
+        if (document.getElementById('ansattNavn')) document.getElementById('ansattNavn').value = '';
+        if (document.getElementById('arslonn')) document.getElementById('arslonn').value = '';
+        if (document.getElementById('startTid')) document.getElementById('startTid').value = '';
+        if (document.getElementById('sluttTid')) document.getElementById('sluttTid').value = '';
+        if (document.getElementById('faktiskTid')) document.getElementById('faktiskTid').value = '0';
+        if (document.getElementById('stillingsprosent')) document.getElementById('stillingsprosent').value = '100';
+        if (document.getElementById('turType')) document.getElementById('turType').value = 'eks3';
         
-        // Tøm timeplan-tabellen fullstendig
         const tbody = document.getElementById('dagerTbody');
         if (tbody) tbody.innerHTML = '';
 
-        // Fjern lagret utkast fra localStorage
         localStorage.removeItem('leirskole_siste_utkast');
 
-        // Oppdater visning og gjør en ren null-beregning
+        isSteg4Completed = false;
+        besokteSteg.clear();
+        besokteSteg.add(0);
+
         toggleTurTypeFields();
         beregnAlt();
 
@@ -285,6 +403,11 @@ function lastInnAvtaleFraData(data) {
         });
     }
 
+    // Markerer Steg 4 som fullført dersom en komplett arkivert avtale lastes inn
+    if (data.arkivNavn) {
+        isSteg4Completed = erGrunnlagsdataFullstendig();
+    }
+
     beregnAlt();
 }
 
@@ -296,6 +419,18 @@ function lastInnSisteUtkast() {
         } catch(e) { console.error(e); }
     }
 }
+
+// Kobler til hendelseslyttere for automatisk nullstilling av steg 4 dersom skjemaendringer skjer
+document.addEventListener('DOMContentLoaded', () => {
+    const felter = ['skoleNavn', 'ansattNavn', 'arslonn', 'startTid', 'sluttTid', 'faktiskTid'];
+    felter.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', nullstillSteg4Fullfoering);
+            el.addEventListener('change', nullstillSteg4Fullfoering);
+        }
+    });
+});
 
 // ==========================================
 // 3. ARKIV MODAL LOGIKK
@@ -697,33 +832,42 @@ function oppdaterSkoleVisning() {
 function beregnAlt() {
     lagreAktivTilStorage();
     
-    const startInputStr = document.getElementById('startTid').value;
-    const sluttInputStr = document.getElementById('sluttTid').value;
+    const startInputStr = document.getElementById('startTid')?.value || "";
+    const sluttInputStr = document.getElementById('sluttTid')?.value || "";
     const valgtModell = document.querySelector('input[name="oppgjorsModell"]:checked')?.value || 'alt1';
     
     oppdaterValgtModellVisning(valgtModell);
 
-    document.getElementById('conNavn').innerText = document.getElementById('ansattNavn').value || "-";
-    document.getElementById('conSkole').innerText = document.getElementById('skoleNavn').value || "-";
-    document.getElementById('conGjelderAar').innerText = GRUNNSATSER.gjelderAar;
+    const conNavn = document.getElementById('conNavn');
+    if (conNavn) conNavn.innerText = document.getElementById('ansattNavn')?.value || "-";
+
+    const conSkole = document.getElementById('conSkole');
+    if (conSkole) conSkole.innerText = document.getElementById('skoleNavn')?.value || "-";
+
+    const conGjelderAar = document.getElementById('conGjelderAar');
+    if (conGjelderAar && typeof GRUNNSATSER !== 'undefined') conGjelderAar.innerText = GRUNNSATSER.gjelderAar;
     
-    const ordinarTid = beregnOrdinatTidFraTabell();
-    const turType = document.getElementById('turType').value;
-    const stillingsType = document.getElementById('stillingsprosent').value;
-    const faktiskTid = parseFloat(document.getElementById('faktiskTid').value) || 0;
+    const ordinarTid = typeof beregnOrdinatTidFraTabell === 'function' ? beregnOrdinatTidFraTabell() : 0;
+    const turType = document.getElementById('turType')?.value || 'eks3';
+    const stillingsType = document.getElementById('stillingsprosent')?.value || '100';
+    const faktiskTid = parseFloat(document.getElementById('faktiskTid')?.value) || 0;
     
-    const arslonnRaw = document.getElementById('arslonn').value.replace(/\s/g, '');
+    const arslonnRaw = (document.getElementById('arslonn')?.value || "").replace(/\s/g, '');
     const arslonn = parseFloat(arslonnRaw) || 0;
 
-    if (arslonn > 0) {
-        document.getElementById('conArslonn').innerText = `kr ${arslonn.toLocaleString('no-NO')},-`;
-    } else {
-        document.getElementById('conArslonn').innerText = "-";
+    const conArslonn = document.getElementById('conArslonn');
+    if (conArslonn) {
+        if (arslonn > 0) {
+            conArslonn.innerText = `kr ${arslonn.toLocaleString('no-NO')},-`;
+        } else {
+            conArslonn.innerText = "-";
+        }
     }
 
-    document.getElementById('conOrdinar').innerText = ordinarTid.toFixed(1);
+    const conOrdinar = document.getElementById('conOrdinar');
+    if (conOrdinar) conOrdinar.innerText = ordinarTid.toFixed(1);
     
-    // HVIS TIDSROM MANGLER: FULLSTENDIG NULLSTILLING AV ALLE BEREGNEDE VISNINGSFFELTER
+    // HVIS TIDSROM MANGLER: FULLSTENDIG NULLSTILLING AV ALLE BEREGNEDE VISNINGSFELTER
     if (!startInputStr || !sluttInputStr) {
         // Hovedoppsummering i skjema
         if (document.getElementById('resVarighet')) document.getElementById('resVarighet').innerText = "-";
@@ -771,7 +915,8 @@ function beregnAlt() {
         const tAlt3LonnTekst = document.getElementById('tAlt3LonnTekst');
         if (tAlt3LonnTekst) tAlt3LonnTekst.innerText = "Ingen utbetaling.";
 
-        oppdaterStartsideKnapper();
+        if (typeof oppdaterStartsideKnapper === 'function') oppdaterStartsideKnapper();
+        if (typeof oppdaterStegIndikatorer === 'function' && typeof aktivtSteg !== 'undefined') oppdaterStegIndikatorer(aktivtSteg);
         return;
     }
 
@@ -826,17 +971,17 @@ function beregnAlt() {
         }
     }
 
-    document.getElementById('conType').innerText = turNavn;
-    document.getElementById('conStilling').innerText = stillingsType === '100' ? "100 % Fast stilling (Overtidsberettiget)" : "Deltid / merarbeidstakst";
+    if (document.getElementById('conType')) document.getElementById('conType').innerText = turNavn;
+    if (document.getElementById('conStilling')) document.getElementById('conStilling').innerText = stillingsType === '100' ? "100 % Fast stilling (Overtidsberettiget)" : "Deltid / merarbeidstakst";
 
-    document.getElementById('resDognSum').innerText = `kr ${totalDognKronsum.toLocaleString('no-NO')},–`;
-    document.getElementById('resVarighet').innerText = `${heleDogn}d og ${restTimer.toFixed(1)}t`;
-    document.getElementById('conVarighet').innerText = `${heleDogn}d ${restTimer.toFixed(0)}t`;
-    document.getElementById('conStart').innerText = start.toLocaleString('no-NO', {dateStyle:'short', timeStyle:'short'});
-    document.getElementById('conSlutt').innerText = slutt.toLocaleString('no-NO', {dateStyle:'short', timeStyle:'short'});
+    if (document.getElementById('resDognSum')) document.getElementById('resDognSum').innerText = `kr ${totalDognKronsum.toLocaleString('no-NO')},–`;
+    if (document.getElementById('resVarighet')) document.getElementById('resVarighet').innerText = `${heleDogn}d og ${restTimer.toFixed(1)}t`;
+    if (document.getElementById('conVarighet')) document.getElementById('conVarighet').innerText = `${heleDogn}d ${restTimer.toFixed(0)}t`;
+    if (document.getElementById('conStart')) document.getElementById('conStart').innerText = start.toLocaleString('no-NO', {dateStyle:'short', timeStyle:'short'});
+    if (document.getElementById('conSlutt')) document.getElementById('conSlutt').innerText = slutt.toLocaleString('no-NO', {dateStyle:'short', timeStyle:'short'});
 
-    document.getElementById('conDognBeregning').innerText = beskrivelseDogn;
-    document.getElementById('conDognTotal').innerText = totalDognKronsum.toLocaleString('no-NO');
+    if (document.getElementById('conDognBeregning')) document.getElementById('conDognBeregning').innerText = beskrivelseDogn;
+    if (document.getElementById('conDognTotal')) document.getElementById('conDognTotal').innerText = totalDognKronsum.toLocaleString('no-NO');
 
     const timelonnUndervisning = arslonn 
         ? ((arslonn * GRUNNSATSER.formelFaktorer.faktor1 * GRUNNSATSER.formelFaktorer.faktor2) / 
@@ -861,9 +1006,9 @@ function beregnAlt() {
     
     let nettoTimer = totalGodskrevet - ordinarTid;
 
-    document.getElementById('resNettoTimerVisning').innerText = `${nettoTimer.toFixed(1)} timer`;
-    document.getElementById('conGodskrevet').innerText = totalGodskrevet.toFixed(1);
-    document.getElementById('conNetto').innerText = nettoTimer.toFixed(1);
+    if (document.getElementById('resNettoTimerVisning')) document.getElementById('resNettoTimerVisning').innerText = `${nettoTimer.toFixed(1)} timer`;
+    if (document.getElementById('conGodskrevet')) document.getElementById('conGodskrevet').innerText = totalGodskrevet.toFixed(1);
+    if (document.getElementById('conNetto')) document.getElementById('conNetto').innerText = nettoTimer.toFixed(1);
 
     let fridagerFraPlusstimer = (nettoTimer > 0 && lengdeVektetArbeidsdag > 0) ? (nettoTimer / lengdeVektetArbeidsdag) : 0;
     let samletFritidDager = antallAvspaseringsdagerFraDognsats + fridagerFraPlusstimer;
@@ -903,35 +1048,80 @@ function beregnAlt() {
         if (mAlt3Tillegg) mAlt3Tillegg.style.display = 'none';
     }
 
-    document.getElementById('tAlt1Lonn').innerText = totalDognKronsum.toLocaleString('no-NO');
-    document.getElementById('tAlt1Timer').innerText = nettoTimer.toFixed(1);
+    if (document.getElementById('tAlt1Lonn')) document.getElementById('tAlt1Lonn').innerText = totalDognKronsum.toLocaleString('no-NO');
+    if (document.getElementById('tAlt1Timer')) document.getElementById('tAlt1Timer').innerText = nettoTimer.toFixed(1);
 
-    document.getElementById('tAlt2Sats').innerText = totalDognKronsum.toLocaleString('no-NO');
-    document.getElementById('tAlt2Overtid').innerText = Math.round(kronePlusstimerFull).toLocaleString('no-NO');
-    document.getElementById('tAlt2Total').innerText = Math.round(totalDognKronsum + kronePlusstimerFull).toLocaleString('no-NO');
+    if (document.getElementById('tAlt2Sats')) document.getElementById('tAlt2Sats').innerText = totalDognKronsum.toLocaleString('no-NO');
+    if (document.getElementById('tAlt2Overtid')) document.getElementById('tAlt2Overtid').innerText = Math.round(kronePlusstimerFull).toLocaleString('no-NO');
+    if (document.getElementById('tAlt2Total')) document.getElementById('tAlt2Total').innerText = Math.round(totalDognKronsum + kronePlusstimerFull).toLocaleString('no-NO');
 
-    document.getElementById('tAlt3SamletSamling').innerText = samletFritidDager.toFixed(2);
-    document.getElementById('tAlt3DagerVis').innerText = antallAvspaseringsdagerFraDognsats.toFixed(2);
-    document.getElementById('tAlt3TimerOmregnetVis').innerText = fridagerFraPlusstimer.toFixed(2);
+    if (document.getElementById('tAlt3SamletSamling')) document.getElementById('tAlt3SamletSamling').innerText = samletFritidDager.toFixed(2);
+    if (document.getElementById('tAlt3DagerVis')) document.getElementById('tAlt3DagerVis').innerText = antallAvspaseringsdagerFraDognsats.toFixed(2);
+    if (document.getElementById('tAlt3TimerOmregnetVis')) document.getElementById('tAlt3TimerOmregnetVis').innerText = fridagerFraPlusstimer.toFixed(2);
 
     const bTillegg = document.getElementById('tAlt3TilleggBoks');
     if (stillingsType === '100' && nettoTimer > 0 && arslonn > 0) {
         if (bTillegg) bTillegg.style.display = 'block';
-        document.getElementById('tAlt3TilleggKroner').innerText = Math.round(kroneKunTillegg).toLocaleString('no-NO');
-        document.getElementById('tAlt3LonnTekst').innerText = "Døgngodtgjørelse avspaseres.";
+        if (document.getElementById('tAlt3TilleggKroner')) document.getElementById('tAlt3TilleggKroner').innerText = Math.round(kroneKunTillegg).toLocaleString('no-NO');
+        if (document.getElementById('tAlt3LonnTekst')) document.getElementById('tAlt3LonnTekst').innerText = "Døgngodtgjørelse avspaseres.";
     } else {
         if (bTillegg) bTillegg.style.display = 'none';
-        document.getElementById('tAlt3LonnTekst').innerText = "Ingen utbetaling.";
+        if (document.getElementById('tAlt3LonnTekst')) document.getElementById('tAlt3LonnTekst').innerText = "Ingen utbetaling.";
     }
 
-    oppdaterStartsideKnapper();
+    if (typeof oppdaterStartsideKnapper === 'function') oppdaterStartsideKnapper();
+    if (typeof oppdaterStegIndikatorer === 'function' && typeof aktivtSteg !== 'undefined') oppdaterStegIndikatorer(aktivtSteg);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    lastInnSisteUtkast();
-    lastInnSkoleProfil(); // Laster inn lagret skoleprofil og logo
-    toggleTurTypeFields();
-    genererDagerTabell();
+    if (typeof lastInnSisteUtkast === 'function') lastInnSisteUtkast();
+    if (typeof lastInnSkoleProfil === 'function') lastInnSkoleProfil();
+    if (typeof toggleTurTypeFields === 'function') toggleTurTypeFields();
+    if (typeof genererDagerTabell === 'function') genererDagerTabell();
+    
     beregnAlt();
-    gaaTilSteg(0);
+    
+    if (typeof gaaTilSteg === 'function') gaaTilSteg(0);
+
+    // --- Koble opp SGS 1010 modal/lenke fra side 0 ---
+    const openBtn = document.getElementById('openSGS1010Btn');
+    const modal = document.getElementById('sgsModal');
+    const closeBtn = document.getElementById('closeSgsModalBtn');
+    const content = document.getElementById('sgsModalContent');
+
+    if (openBtn && modal && content) {
+        openBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof getSGS1010HTML === 'function') {
+                content.innerHTML = getSGS1010HTML();
+                modal.style.display = 'flex';
+            }
+        });
+    }
+
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Lyttere for å tilbakestille Steg 4-godkjenning ved endring i skjemaet i ettertid
+    const felter = ['skoleNavn', 'ansattNavn', 'arslonn', 'startTid', 'sluttTid', 'faktiskTid'];
+    felter.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => {
+                if (typeof nullstillSteg4Fullfoering === 'function') nullstillSteg4Fullfoering();
+            });
+            el.addEventListener('change', () => {
+                if (typeof nullstillSteg4Fullfoering === 'function') nullstillSteg4Fullfoering();
+            });
+        }
+    });
 });

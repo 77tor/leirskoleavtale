@@ -11,6 +11,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="grunnsatser.js" defer></script>
+    <script src="sgs1010.js"></script>
     <script src="app.js" defer></script>
 </head>
 <body>
@@ -49,7 +50,7 @@
     <div class="form-step active no-print" id="step-0">
         <div class="card start-card">
             <h2>Velkommen til beregningsverktøyet</h2>
-            <p>Dette verktøyet hjelper deg å beregne godtgjørelse, arbeidstid og fridager ved leirskole og andre overnattingsturer iht. <strong>SGS 1010</strong> og <strong>SFS 2213</strong>.</p>
+            <p>Dette verktøyet hjelper deg å beregne godtgjørelse, arbeidstid og fridager ved leirskole og andre overnattingsturer iht. <a href="#" id="openSGS1010Btn" style="color: var(--accent-blue, #38bdf8); text-decoration: underline; font-weight: 600; cursor: pointer;">SGS 1010</a> og <strong>SFS 2213</strong>.</p>
             
             <div class="start-info-grid">
                 <div class="info-box">
@@ -474,6 +475,14 @@
         <div class="modal-footer">
             <button class="btn btn-primary" style="width:auto; padding:6px 16px;" onclick="lukkSkoleModal()">Ferdig</button>
         </div>
+    </div>
+</div>
+
+<!-- MODAL FOR SGS 1010 AVTALETEKST -->
+<div id="sgsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); z-index: 99999; justify-content: center; align-items: center;">
+    <div style="background: #1e293b; color: #f8fafc; max-width: 800px; width: 90%; max-height: 85vh; overflow-y: auto; text-align: left; position: relative; padding: 2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);">
+        <button id="closeSgsModalBtn" class="btn btn-secondary btn-sm" style="position: absolute; top: 1rem; right: 1rem; font-size: 1.2rem; cursor: pointer;">&times;</button>
+        <div id="sgsModalContent"></div>
     </div>
 </div>
 

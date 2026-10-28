@@ -40,6 +40,7 @@ p.subtitle { margin: 6px 0 0 0; opacity: 0.85; font-size: 13.5px; }
 }
 button.btn-lg { padding: 14px 20px; font-size: 15px; width: 100%; }
 
+
 /* ==========================================================================
    3. STEG-NAVIGASJON (PROGRESS BAR)
    ========================================================================== */
@@ -51,6 +52,37 @@ button.btn-lg { padding: 14px 20px; font-size: 15px; width: 100%; }
 .step-label { font-size: 11.5px; font-weight: 600; color: var(--text-main); }
 .form-step { display: none; }
 .form-step.active { display: block; }
+
+/* Nåværende aktivt steg (Blå ring/markeringsfarge) */
+.step-item.active .step-num {
+    background-color: var(--blue-btn, #2563eb) !important;
+    color: #ffffff !important;
+    border-color: var(--blue-btn, #2563eb) !important;
+}
+
+/* Fullført passert steg (Grønn ring) */
+.step-item.completed:not(.active) .step-num {
+    background-color: #22c55e !important;
+    color: #ffffff !important;
+    border-color: #22c55e !important;
+}
+
+/* Ufullstendig passert steg (Oransje ring) */
+.step-item.warning:not(.active) .step-num {
+    background-color: #f97316 !important;
+    color: #ffffff !important;
+    border-color: #f97316 !important;
+}
+
+/* Fremtidige/ufylte steg (Grå/Nøytral ring) */
+.step-item:not(.active):not(.completed):not(.warning) {
+    opacity: 0.5;
+}
+.step-item:not(.active):not(.completed):not(.warning) .step-num {
+    background-color: #e2e8f0 !important;
+    color: var(--text-main, #334155) !important;
+    border-color: #cbd5e1 !important;
+}
 
 /* ==========================================================================
    4. KORT, SKJEMA OG INPUT-FELTER
