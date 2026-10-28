@@ -508,9 +508,22 @@ function beregnOrdinatTidFraTabell() {
 }
 
 
+
 // ==========================================
-// SKOLEPROFIL OG LOGO LOGIKK
+// SKOLEPROFIL OG LOGO LOGIKK (DYNAMISK HÅNES-DEFAULT OG ARKIV PER SKOLE)
 // ==========================================
+
+// Standard profil for Hånes skoleenhet
+const standardHanesProfil = {
+    gate: 'Øvre Brattbakken 1',
+    post: '4635 Kristiansand',
+    org: '974 598 825',
+    tlf: '41535959',
+    epost: 'Post.Hanes.Skole@kristiansand.kommune.no',
+    web: 'www.minskole.no/haanes',
+    logo: 'logo_haanes.png'
+};
+
 function apneSkoleModal() {
     lastInnSkoleProfil();
     const modal = document.getElementById('modalSkole');
@@ -536,85 +549,121 @@ function handterLogoOpplasting(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         const base64Image = e.target.result;
-        localStorage.setItem('leirskole_logo', base64Image);
-        oppdaterSkoleVisning();
+        lagreSkoleProfil(base64Image);
     };
     reader.readAsDataURL(file);
 }
 
 function fjernLogo() {
-    localStorage.removeItem('leirskole_logo');
     const input = document.getElementById('skoleLogoInput');
     if (input) input.value = '';
-    oppdaterSkoleVisning();
+    lagreSkoleProfil(''); // Fjerner logo for aktiv profil
 }
 
-function lagreSkoleProfil() {
+// Lagrer profil og logo knyttet til det valgte skolenavnet
+function lagreSkoleProfil(nyLogoBase64) {
+    const skoleNavn = document.getElementById('skoleNavn')?.value.trim() || 'Skole/Virksomhet';
+    
+    // Hent alle lagrede skoleprofiler fra localStorage
+    let arkiv = {};
+    try {
+        arkiv = JSON.parse(localStorage.getItem('leirskole_skoleprofiler_arkiv')) || {};
+    } catch(e) { arkiv = {}; }
+
+    // Hent eksisterende logo dersom det ikke er medsendt en ny logo eller fjerning
+    const eksisterendeProfil = arkiv[skoleNavn] || {};
+    let gjeldedeLogo = (nyLogoBase64 !== undefined) ? nyLogoBase64 : (eksisterendeProfil.logo || '');
+
     const profil = {
         gate: document.getElementById('skoleGateInput')?.value || '',
         post: document.getElementById('skolePostInput')?.value || '',
         org: document.getElementById('skoleOrgInput')?.value || '',
         tlf: document.getElementById('skoleTlfInput')?.value || '',
         epost: document.getElementById('skoleEpostInput')?.value || '',
-        web: document.getElementById('skoleWebInput')?.value || ''
+        web: document.getElementById('skoleWebInput')?.value || '',
+        logo: gjeldedeLogo
     };
-    localStorage.setItem('leirskole_skoleprofil', JSON.stringify(profil));
+
+    arkiv[skoleNavn] = profil;
+    localStorage.setItem('leirskole_skoleprofiler_arkiv', JSON.stringify(arkiv));
     oppdaterSkoleVisning();
 }
 
+// Laster inn riktig profil basert på skolenavnet i feltet
 function lastInnSkoleProfil() {
+    const skoleNavn = document.getElementById('skoleNavn')?.value.trim() || 'Hånes skoleenhet';
+    
+    let arkiv = {};
     try {
-        const profil = JSON.parse(localStorage.getItem('leirskole_skoleprofil'));
-        if (profil) {
-            if (document.getElementById('skoleGateInput')) document.getElementById('skoleGateInput').value = profil.gate || '';
-            if (document.getElementById('skolePostInput')) document.getElementById('skolePostInput').value = profil.post || '';
-            if (document.getElementById('skoleOrgInput')) document.getElementById('skoleOrgInput').value = profil.org || '';
-            if (document.getElementById('skoleTlfInput')) document.getElementById('skoleTlfInput').value = profil.tlf || '';
-            if (document.getElementById('skoleEpostInput')) document.getElementById('skoleEpostInput').value = profil.epost || '';
-            if (document.getElementById('skoleWebInput')) document.getElementById('skoleWebInput').value = profil.web || '';
-        }
-    } catch(e) {}
+        arkiv = JSON.parse(localStorage.getItem('leirskole_skoleprofiler_arkiv')) || {};
+    } catch(e) { arkiv = {}; }
+
+    let profil = arkiv[skoleNavn];
+
+    // Hvis det er Hånes skoleenhet og ingen profil er lagret enda, bruk standard Hånes-data
+    if (!profil && skoleNavn.toLowerCase() === 'hånes skoleenhet') {
+        profil = standardHanesProfil;
+    }
+
+    // Fyll inn i skjemaet hvis feltene finnes
+    if (document.getElementById('skoleGateInput')) document.getElementById('skoleGateInput').value = profil?.gate || '';
+    if (document.getElementById('skolePostInput')) document.getElementById('skolePostInput').value = profil?.post || '';
+    if (document.getElementById('skoleOrgInput')) document.getElementById('skoleOrgInput').value = profil?.org || '';
+    if (document.getElementById('skoleTlfInput')) document.getElementById('skoleTlfInput').value = profil?.tlf || '';
+    if (document.getElementById('skoleEpostInput')) document.getElementById('skoleEpostInput').value = profil?.epost || '';
+    if (document.getElementById('skoleWebInput')) document.getElementById('skoleWebInput').value = profil?.web || '';
+
     oppdaterSkoleVisning();
 }
 
 function oppdaterSkoleVisning() {
-    const skoleNavn = document.getElementById('skoleNavn')?.value || 'Skole/Virksomhet';
-    const profil = JSON.parse(localStorage.getItem('leirskole_skoleprofil') || '{}');
-    const logoBase64 = localStorage.getItem('leirskole_logo');
+    const skoleNavn = document.getElementById('skoleNavn')?.value.trim() || 'Skole/Virksomhet';
+    
+    let arkiv = {};
+    try {
+        arkiv = JSON.parse(localStorage.getItem('leirskole_skoleprofiler_arkiv')) || {};
+    } catch(e) { arkiv = {}; }
 
-    // Venstre side i bunnteksten
+    let profil = arkiv[skoleNavn];
+    if (!profil && skoleNavn.toLowerCase() === 'hånes skoleenhet') {
+        profil = standardHanesProfil;
+    }
+
+    // Oppdater venstre side i bunnteksten
     const conFooterSkole = document.getElementById('conFooterSkole');
     if (conFooterSkole) conFooterSkole.innerText = skoleNavn;
     
     const conFooterOrg = document.getElementById('conFooterOrg');
-    if (conFooterOrg) conFooterOrg.innerText = profil.org ? `(${profil.org})` : '';
+    if (conFooterOrg) conFooterOrg.innerText = profil?.org ? `(${profil.org})` : '';
 
     const conFooterAdresse = document.getElementById('conFooterAdresse');
     if (conFooterAdresse) {
-        const adrKomplett = [profil.gate, profil.post].filter(Boolean).join(' / ');
+        const adrKomplett = [profil?.gate, profil?.post].filter(Boolean).join(' / ');
         conFooterAdresse.innerText = adrKomplett;
     }
 
     const conFooterTlf = document.getElementById('conFooterTlf');
-    if (conFooterTlf) conFooterTlf.innerText = profil.tlf ? `Tlf: ${profil.tlf}` : '';
+    if (conFooterTlf) conFooterTlf.innerText = profil?.tlf ? `Tlf: ${profil.tlf}` : '';
 
-    // Høyre side i bunnteksten
+    // Oppdater høyre side i bunnteksten
     const conFooterEpost = document.getElementById('conFooterEpost');
-    if (conFooterEpost) conFooterEpost.innerText = profil.epost || '';
+    if (conFooterEpost) conFooterEpost.innerText = profil?.epost || '';
 
     const conFooterWeb = document.getElementById('conFooterWeb');
-    if (conFooterWeb) conFooterWeb.innerText = profil.web || '';
+    if (conFooterWeb) conFooterWeb.innerText = profil?.web || '';
 
-    // Logo
+    // Oppdater logo-visning i kontrakt og forhåndsvisning
     const conLogoVisning = document.getElementById('conLogoVisning');
     const conLogoImg = document.getElementById('conLogoImg');
     const logoPreviewContainer = document.getElementById('logoPreviewContainer');
     const logoPreviewImg = document.getElementById('logoPreviewImg');
 
-    if (logoBase64) {
-        if (conLogoImg) conLogoImg.src = logoBase64;
+    const logoSrc = profil?.logo || '';
+
+    if (logoSrc) {
+        if (conLogoImg) conLogoImg.src = logoSrc;
         if (conLogoVisning) conLogoVisning.style.display = 'block';
-        if (logoPreviewImg) logoPreviewImg.src = logoBase64;
+        if (logoPreviewImg) logoPreviewImg.src = logoSrc;
         if (logoPreviewContainer) logoPreviewContainer.style.display = 'flex';
     } else {
         if (conLogoVisning) conLogoVisning.style.display = 'none';
@@ -623,6 +672,10 @@ function oppdaterSkoleVisning() {
 }
 
 
+
+// ==========================================
+// SKOLEPROFIL SLUTT
+// ==========================================
 
 function beregnAlt() {
     lagreAktivTilStorage();

@@ -75,13 +75,13 @@
         <div class="card">
             <h2>1. Person- og stillingsopplysninger <span class="badge">Steg 1 av 4</span></h2>
             <div class="form-grid two-col">
-                <div class="form-group">
-                    <label for="skoleNavn">Skole/Virksomhet</label>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="skoleNavn" value="Hånes skoleenhet" oninput="beregnAlt()">
-                        <button type="button" class="btn-sm" style="white-space: nowrap;" onclick="apneSkoleModal()">🏫 Skoleprofil / Logo</button>
-                    </div>
-                </div>
+<div class="form-group">
+    <label for="skoleNavn">Skole/Virksomhet</label>
+    <div style="display: flex; gap: 8px;">
+        <input type="text" id="skoleNavn" value="Hånes skoleenhet" oninput="lastInnSkoleProfil(); beregnAlt();">
+        <button type="button" class="btn-sm" style="white-space: nowrap;" onclick="apneSkoleModal()">🏫 Skoleprofil / Logo</button>
+    </div>
+</div>
                 <div class="form-group">
                     <label for="ansattNavn">Ansattes navn</label>
                     <input type="text" id="ansattNavn" placeholder="Skriv navn..." oninput="beregnAlt()">
