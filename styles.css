@@ -120,26 +120,28 @@ button.btn-save { background: #8b5cf6; }
    9. KONTRAKTDOKUMENT OG UTSKRIFT (PRINT) - MODERNE DESIGN
    ========================================================================== */
 .contract-preview { background: #ffffff; padding: 40px 45px 25px 45px; border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #1e293b; line-height: 1.5; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); margin: 0 auto; max-width: 800px; display: flex; flex-direction: column; justify-content: space-between; min-height: 920px; box-sizing: border-box; }
-.contract-header { text-align: center; margin-bottom: 22px; padding-bottom: 12px; border-bottom: 2px solid #2563eb; }
+.contract-header { text-align: center; margin-bottom: 26px; padding-bottom: 14px; border-bottom: 2px solid #2563eb; }
 .contract-header h2 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px; color: #0f172a; text-transform: uppercase; }
 .contract-header p { margin: 4px 0 0 0; font-size: 11px; font-weight: 500; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
 .contract-body { flex-grow: 1; }
-.contract-section { margin-bottom: 20px; }
-.contract-section h3 { margin: 0 0 8px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #2563eb; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
-.contract-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; background: #f8fafc; padding: 10px 14px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 11px; }
+.contract-section { margin-bottom: 26px; }
+.contract-section h3 { margin: 0 0 10px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #2563eb; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+.contract-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; background: #f8fafc; padding: 12px 16px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 11px; }
 .contract-grid-full { grid-column: span 2; }
 .contract-grid-item { display: flex; justify-content: space-between; }
 .contract-grid-item strong { color: #475569; }
-.con-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 8px; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e1; font-size: 10.5px; }
-.con-table th { background-color: #f1f5f9; color: #334155; font-weight: 600; padding: 7px 10px; text-align: left; border-bottom: 1px solid #cbd5e1; }
-.con-table td { padding: 7px 10px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+.con-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e1; font-size: 10.5px; }
+.con-table th { background-color: #f1f5f9; color: #334155; font-weight: 600; padding: 8px 10px; text-align: left; border-bottom: 1px solid #cbd5e1; }
+.con-table td { padding: 8px 10px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
 .con-table tr:last-child td { border-bottom: none; }
 .con-table tr.selected-row { background-color: #eff6ff !important; }
 .con-table tr.selected-row td { border-color: #bfdbfe; }
 .badge-check { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; background: #e2e8f0; color: #64748b; }
 .selected-row .badge-check { background: #2563eb; color: #ffffff; }
-.signature-area { margin-top: 22px; display: flex; justify-content: space-between; gap: 40px; }
-.sig-line { width: 48%; border-top: 1px dashed #94a3b8; text-align: center; padding-top: 5px; font-size: 10px; color: #475569; font-weight: 500; }
+.signature-area { margin-top: 20px; display: flex; justify-content: space-between; gap: 40px; }
+.sig-block { width: 48%; }
+.sig-sub-line { font-size: 9.5px; color: #94a3b8; margin-bottom: 25px; font-weight: 400; }
+.sig-main-line { border-top: 1px dashed #94a3b8; padding-top: 5px; font-size: 10px; color: #475569; font-weight: 500; }
 .contract-footer { margin-top: auto; border-top: 1px solid #cbd5e1; padding-top: 10px; font-size: 8pt; color: #64748b; display: flex; justify-content: space-between; align-items: flex-end; }
 
 @media print { .no-print, header, .card, .step-tracker, .modal-header, .modal-footer, #modalArkiv, #modalLagre, #modalSkole { display: none !important; } body, html { background: #ffffff !important; margin: 0 !important; padding: 0 !important; } #modalPreview.modal-overlay { position: static !important; display: block !important; background: none !important; backdrop-filter: none !important; padding: 0 !important; } #modalPreview .modal-content { max-width: 100% !important; max-height: none !important; border: none !important; box-shadow: none !important; padding: 0 !important; } #modalPreview .modal-body { background: white !important; padding: 0 !important; overflow: visible !important; } .contract-preview { display: flex !important; flex-direction: column !important; justify-content: space-between !important; min-height: 27.2cm !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; background: #ffffff !important; font-size: 10.5pt; box-sizing: border-box !important; } .contract-grid { background: #ffffff !important; border: 1px solid #cbd5e1 !important; } .con-table tr.selected-row { background-color: #f0fdf4 !important; } .contract-footer { margin-top: auto !important; display: flex !important; border-top: 1px solid #cbd5e1 !important; padding-top: 8px !important; font-size: 7.8pt !important; color: #475569 !important; } @page { size: A4; margin: 1.0cm 1.4cm 0.8cm 1.4cm; } }
