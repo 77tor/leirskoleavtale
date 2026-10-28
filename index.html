@@ -56,54 +56,54 @@
                     <h4>📋 Hva gjør verktøyet?</h4>
                     <p>Beregner døgngodtgjørelse, godskrevne timer vs. bortfalt planfestet tid på skolen, samt omregning til avspaseringsdager eller overtidstillegg.</p>
                 </div>
-<div class="info-box">
-    <h4>📂 Lagring & Arkiv</h4>
-    <p>Avtaler lagres lokalt i nettleseren på denne enheten. For å flytte eller se lagrede avtaler på en annen PC/enhet, eksporterer du arkivet som <strong>JSON-fil</strong> og importerer den der.</p>
-</div>
-            </div>
-
-<div class="start-actions">
-    <button type="button" class="btn btn-primary btn-lg" onclick="startNyAvtale()">➕ Opprett ny avtale</button>
-    <button type="button" class="btn btn-secondary btn-lg" id="btnFortsett" style="display: none;" onclick="fortsettPaaGjeldende()">✏️ Fortsett på nåværende skjema</button>
-    <button type="button" class="btn btn-save btn-lg" onclick="apneArkivModal()">📁 Åpne arkiv / lagrede avtaler</button>
-</div>
-        </div>
-    </div>
-
-<!-- STEG 1: PERSON OG STILLING -->
-<div class="form-step no-print" id="step-1">
-    <div class="card">
-        <h2>1. Person- og stillingsopplysninger <span class="badge">Steg 1 av 4</span></h2>
-        <div class="form-grid two-col">
-            <div class="form-group">
-                <label for="skoleNavn">Skole/Virksomhet</label>
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" id="skoleNavn" value="Hånes skoleenhet" oninput="beregnAlt()">
-                    <button type="button" class="btn-sm" style="white-space: nowrap;" onclick="apneSkoleModal()">🏫 Skoleprofil / Logo</button>
+                <div class="info-box">
+                    <h4>📂 Lagring & Arkiv</h4>
+                    <p>Avtaler lagres lokalt i nettleseren på denne enheten. For å flytte eller se lagrede avtaler på en annen PC/enhet, eksporterer du arkivet som <strong>JSON-fil</strong> og importerer den der.</p>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="ansattNavn">Ansattes navn</label>
-                <input type="text" id="ansattNavn" placeholder="Skriv navn..." oninput="beregnAlt()">
+
+            <div class="start-actions">
+                <button type="button" class="btn btn-primary btn-lg" onclick="startNyAvtale()">➕ Opprett ny avtale</button>
+                <button type="button" class="btn btn-secondary btn-lg" id="btnFortsett" style="display: none;" onclick="fortsettPaaGjeldende()">✏️ Fortsett på nåværende skjema</button>
+                <button type="button" class="btn btn-save btn-lg" onclick="apneArkivModal()">📁 Åpne arkiv / lagrede avtaler</button>
             </div>
-            <div class="form-group">
-                <label for="stillingsprosent">Stillingsprosent</label>
-                <select id="stillingsprosent" onchange="beregnAlt()">
-                    <option value="100" selected>100 % stilling (Kvalifiserer for overtidstillegg)</option>
-                    <option value="part">Deltid (Merarbeid inntil full stilling)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="arslonn">Årslønn <span class="tooltip-icon" title="Nødvendig for å beregne overtidstillegg og omregning av fridager">ⓘ</span></label>
-                <input type="text" id="arslonn" placeholder="f.eks. 600 000" oninput="formatertArslonnInput()">
-            </div>
-        </div>
-        <div class="nav-buttons">
-            <button type="button" class="btn btn-secondary" onclick="gaaTilSteg(0)">⬅ Tilbake til start</button>
-            <button type="button" class="btn btn-primary" onclick="nesteSteg()">Neste: Reisedetaljer ➔</button>
         </div>
     </div>
-</div>
+
+    <!-- STEG 1: PERSON OG STILLING -->
+    <div class="form-step no-print" id="step-1">
+        <div class="card">
+            <h2>1. Person- og stillingsopplysninger <span class="badge">Steg 1 av 4</span></h2>
+            <div class="form-grid two-col">
+                <div class="form-group">
+                    <label for="skoleNavn">Skole/Virksomhet</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="skoleNavn" value="Hånes skoleenhet" oninput="beregnAlt()">
+                        <button type="button" class="btn-sm" style="white-space: nowrap;" onclick="apneSkoleModal()">🏫 Skoleprofil / Logo</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ansattNavn">Ansattes navn</label>
+                    <input type="text" id="ansattNavn" placeholder="Skriv navn..." oninput="beregnAlt()">
+                </div>
+                <div class="form-group">
+                    <label for="stillingsprosent">Stillingsprosent</label>
+                    <select id="stillingsprosent" onchange="beregnAlt()">
+                        <option value="100" selected>100 % stilling (Kvalifiserer for overtidstillegg)</option>
+                        <option value="part">Deltid (Merarbeid inntil full stilling)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="arslonn">Årslønn <span class="tooltip-icon" title="Nødvendig for å beregne overtidstillegg og omregning av fridager">ⓘ</span></label>
+                    <input type="text" id="arslonn" placeholder="f.eks. 600 000" oninput="formatertArslonnInput()">
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button type="button" class="btn btn-secondary" onclick="gaaTilSteg(0)">⬅ Tilbake til start</button>
+                <button type="button" class="btn btn-primary" onclick="nesteSteg()">Neste: Reisedetaljer ➔</button>
+            </div>
+        </div>
+    </div>
 
     <!-- STEG 2: REISEN OG TURTYPE -->
     <div class="form-step no-print" id="step-2">
@@ -213,14 +213,14 @@
                 <div class="result-row total"><span>Netto plusstimer opparbeidet:</span><span id="resNettoTimerVisning">0 timer</span></div>
             </div>
 
-<div class="nav-buttons">
-    <button type="button" class="btn btn-secondary" onclick="forrigeSteg()">⬅ Tilbake</button>
-    <div class="btn-group-inline">
-        <button type="button" class="btn btn-secondary" onclick="gaaTilSteg(0)">🏠 Tilbake til start</button>
-        <button type="button" class="btn btn-save" onclick="lagreOgStartNy()">💾 Lagre & Ny avtale</button>
-        <button type="button" class="btn btn-primary" onclick="apneModal()">📄 Forhåndsvis avtale</button>
-    </div>
-</div>
+            <div class="nav-buttons">
+                <button type="button" class="btn btn-secondary" onclick="forrigeSteg()">⬅ Tilbake</button>
+                <div class="btn-group-inline">
+                    <button type="button" class="btn btn-secondary" onclick="gaaTilSteg(0)">🏠 Tilbake til start</button>
+                    <button type="button" class="btn btn-save" onclick="lagreOgStartNy()">💾 Lagre & Ny avtale</button>
+                    <button type="button" class="btn btn-primary" onclick="apneModal()">📄 Forhåndsvis avtale</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -234,85 +234,91 @@
         </div>
         <div class="modal-body">
             <div class="contract-preview" id="contract-document">
-                <div class="contract-header">
-                    <h2>Særavtale / Arbeidsplan</h2>
-                    <p>for overnattingsturer jfr. SGS 1010, SFS 2213 & AML (Satsår: <span id="conGjelderAar">-</span>)</p>
+                <!-- LOGO OG HEADER -->
+                <div class="contract-top-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #2563eb; padding-bottom: 12px;">
+                    <div id="conLogoVisning" style="max-width: 140px; max-height: 50px; display: none;">
+                        <img id="conLogoImg" src="" alt="Skolelogo" style="max-width: 100%; max-height: 50px; object-fit: contain;">
+                    </div>
+                    <div class="contract-header" style="border: none; margin: 0; padding: 0; text-align: right; flex-grow: 1;">
+                        <h2 style="margin: 0; font-size: 18px;">Særavtale / Arbeidsplan</h2>
+                        <p style="margin: 2px 0 0 0;">for overnattingsturer jfr. SGS 1010, SFS 2213 & AML (Satsår: <span id="conGjelderAar">-</span>)</p>
+                    </div>
                 </div>
 
                 <div class="contract-section">
                     <h3>1. Stillingsforhold</h3>
-                    <table style="width:100%; font-size: 12px; line-height: 1.4;">
-                        <tr><td style="width: 25%; border:none; padding:2px 0;"><strong>Arbeidsgiver:</strong></td><td id="conSkole" style="border:none; padding:2px 0;">Hånes skoleenhet</td></tr>
-                        <tr><td style="border:none; padding:2px 0;"><strong>Ansatt:</strong></td><td id="conNavn" style="border:none; padding:2px 0;">-</td></tr>
-                        <tr><td style="border:none; padding:2px 0;"><strong>Stilling:</strong></td><td id="conStilling" style="border:none; padding:2px 0;">-</td></tr>
-                        <tr><td style="border:none; padding:2px 0;"><strong>Årslønn:</strong></td><td id="conArslonn" style="border:none; padding:2px 0;">-</td></tr>
-                    </table>
+                    <div class="contract-grid">
+                        <div><strong>Arbeidsgiver:</strong> <span id="conSkole">Hånes skoleenhet</span></div>
+                        <div><strong>Stilling:</strong> <span id="conStilling">-</span></div>
+                        <div><strong>Ansatt:</strong> <span id="conNavn">-</span></div>
+                        <div><strong>Årslønn:</strong> <span id="conArslonn">-</span></div>
+                    </div>
                 </div>
 
                 <div class="contract-section">
                     <h3>2. Reisens omfang og tidsregnskap</h3>
-                    <table style="width:100%; font-size: 12px; line-height: 1.4;">
-                        <tr><td style="width: 25%; border:none; padding:2px 0;"><strong>Kategori:</strong></td><td id="conType" style="border:none; padding:2px 0;">-</td></tr>
-                        <tr><td style="border:none; padding:2px 0;"><strong>Tidsrom:</strong></td><td style="border:none; padding:2px 0;">Fra <span id="conStart">-</span> til <span id="conSlutt">-</span> (<span id="conVarighet">-</span>)</td></tr>
-                        <tr><td style="border:none; padding:2px 0;"><strong>Timeberegning:</strong></td><td style="border:none; padding:2px 0;">Bortfalt tid på skolen: <strong><span id="conOrdinar">-</span> t</strong> | Godskrevet/faktisk tid på tur: <strong><span id="conGodskrevet">-</span> t</strong></td></tr>
-                        <tr><td style="border:none; padding:2px 0; color:#000;"><strong>Netto tid:</strong></td><td style="border:none; padding:2px 0; color:#000;"><strong><span id="conNetto">-</span> plusstimer til avstemming</strong></td></tr>
-                        <tr><td style="border:none; padding:4px 0 2px 0; border-top:1px dashed #ccc;"><strong>Døgngodtgjørelse:</strong></td><td style="border:none; padding:4px 0 2px 0; border-top:1px dashed #ccc;"><span id="conDognBeregning">-</span> = <strong>kr <span id="conDognTotal">-</span></strong></td></tr>
-                    </table>
+                    <div class="contract-grid">
+                        <div class="contract-grid-full"><strong>Kategori:</strong> <span id="conType">-</span></div>
+                        <div class="contract-grid-full"><strong>Tidsrom:</strong> Fra <span id="conStart">-</span> til <span id="conSlutt">-</span> (<span id="conVarighet">-</span>)</div>
+                        <div class="contract-grid-full"><strong>Timeberegning:</strong> Bortfalt tid: <strong><span id="conOrdinar">-</span> t</strong> | Godskrevet/faktisk tid: <strong><span id="conGodskrevet">-</span> t</strong></div>
+                        <div><strong>Netto timeavstemming:</strong> <strong><span id="conNetto">-</span> plusstimer</strong></div>
+                        <div><strong>Døgngodtgjørelse:</strong> <span id="conDognBeregning">-</span> = <strong>kr <span id="conDognTotal">-</span></strong></div>
+                    </div>
                 </div>
 
                 <div class="contract-section">
-                    <h3>3. Sluttbehandlingsalternativer (Valgt oppgjør er avkrysset)</h3>
-                    <p style="margin: 0 0 6px 0; font-size: 11px;">Partene velger herved én av følgende samlede oppgjørsmodeller for turen:</p>
+                    <h3>3. Sluttbehandlingsalternativer (Valgt oppgjør er merket)</h3>
+                    <p style="margin: 0 0 6px 0; font-size: 10.5px; color: #64748b;">Partene velger herved én av følgende samlede oppgjørsmodeller for turen:</p>
                     
                     <table class="con-table">
                         <thead>
                             <tr>
-                                <th style="width: 8%;">Valg</th>
-                                <th style="width: 22%;">Modell</th>
-                                <th>Økonomisk oppgjør</th>
-                                <th>Avspasering</th>
+                                <th style="width: 10%; text-align:center;">Status</th>
+                                <th style="width: 20%;">Modell</th>
+                                <th style="width: 35%;">Økonomisk oppgjør</th>
+                                <th style="width: 35%;">Avspasering / Tidskonto</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr id="rowAlt1">
-                                <td style="text-align:center; font-weight:bold; font-size:13px; vertical-align: middle;" id="chkAlt1">[   ]</td>
-                                <td><strong>Alt. 1</strong><br><small style="color:#555;">Lønn + tid</small></td>
+                                <td style="text-align:center; vertical-align: middle;"><span class="badge-check" id="chkAlt1">Valgt</span></td>
+                                <td><strong>Alt. 1</strong><br><small style="color:#64748b;">Lønn + tid</small></td>
                                 <td>Døgngodtgjørelse utbetales:<br><strong>kr <span id="tAlt1Lonn">-</span></strong></td>
                                 <td>Netto plusstimer overføres 1:1:<br><strong><span id="tAlt1Timer">-</span> timer</strong></td>
                             </tr>
                             <tr id="rowAlt2">
-                                <td style="text-align:center; font-weight:bold; font-size:13px; vertical-align: middle;" id="chkAlt2">[   ]</td>
-                                <td><strong>Alt. 2</strong><br><small style="color:#555;">Alt i lønn</small></td>
-                                <td>Døgngodtgjørelse + plusstimer utbetales:<br><span style="font-size:10.5px; color:#444;">Sats: kr <span id="tAlt2Sats">-</span> + Timer: kr <span id="tAlt2Overtid">-</span></span><br><strong>Totalt brutto: kr <span id="tAlt2Total">-</span></strong></td>
-                                <td>Ingen timer til tidskonto.<br><small style="font-style:italic; opacity:0.6;">(Alt utbetales)</small></td>
+                                <td style="text-align:center; vertical-align: middle;"><span class="badge-check" id="chkAlt2">–</span></td>
+                                <td><strong>Alt. 2</strong><br><small style="color:#64748b;">Alt i lønn</small></td>
+                                <td>Døgngodtgjørelse + plusstimer utbetales:<br><span style="font-size:10px; color:#64748b;">Sats: kr <span id="tAlt2Sats">-</span> + Overtid: kr <span id="tAlt2Overtid">-</span></span><br><strong>Totalt brutto: kr <span id="tAlt2Total">-</span></strong></td>
+                                <td>Ingen timer til tidskonto.<br><small style="font-style:italic; color:#94a3b8;">(Alt utbetales)</small></td>
                             </tr>
                             <tr id="rowAlt3">
-                                <td style="text-align:center; font-weight:bold; font-size:13px; vertical-align: middle;" id="chkAlt3">[   ]</td>
-                                <td><strong>Alt. 3</strong><br><small style="color:#555;">Alt til fritid</small></td>
+                                <td style="text-align:center; vertical-align: middle;"><span class="badge-check" id="chkAlt3">–</span></td>
+                                <td><strong>Alt. 3</strong><br><small style="color:#64748b;">Alt til fritid</small></td>
                                 <td>
                                     <span id="tAlt3LonnTekst">Døgngodtgjørelse avspaseres.</span>
-                                    <div id="tAlt3TilleggBoks" style="display:none; margin-top:2px; border-top:1px dashed #777; padding-top:2px;">
-                                        Utbetalt 50% overtidstillegg:<br><strong style="color:#b5179e;">kr <span id="tAlt3TilleggKroner">-</span></strong>
+                                    <div id="tAlt3TilleggBoks" style="display:none; margin-top:3px; border-top:1px dashed #cbd5e1; padding-top:2px;">
+                                        Utbetalt 50% overtidstillegg:<br><strong style="color:#2563eb;">kr <span id="tAlt3TilleggKroner">-</span></strong>
                                     </div>
                                 </td>
                                 <td>
-                                    <strong>Samlet tidsavstemming til tidskonto:</strong><br>
+                                    <strong>Samlet tidsavstemming:</strong><br>
                                     • Total fritid: <strong><span id="tAlt3SamletSamling">-</span> fridager</strong><br>
-                                    <span style="font-size:10px; color:#555;">
-                                        (Omfatter <span id="tAlt3DagerVis">-</span> dager fra døgngodt + <span id="tAlt3TimerOmregnetVis">-</span> dager fra plusstimer)
+                                    <span style="font-size:9.5px; color:#64748b;">
+                                        (<span id="tAlt3DagerVis">-</span> dager fra døgngodt + <span id="tAlt3TimerOmregnetVis">-</span> dager fra plusstimer)
                                     </span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <p style="font-size: 10px; font-style: italic; opacity:0.8; margin: 5px 0 0 0;">
+                    <p style="font-size: 9.5px; font-style: italic; color: #94a3b8; margin: 6px 0 0 0;">
                         *Omregning til fridager skjer iht. SFS 2213 basert på en vektet skoledag bestående av undervisning (741/190) og tilstedeværelse (506,5/190).
                     </p>
                 </div>
 
                 <div class="contract-section">
                     <h3>4. Godkjenning og Signatur</h3>
-                    <p style="font-size: 10px; text-align: justify; opacity: 0.85; margin: 0 0 15px 0; line-height: 1.4;">
+                    <p style="font-size: 9.5px; text-align: justify; color: #64748b; margin: 0 0 20px 0; line-height: 1.4;">
                         Avtalen er bindende og opprettet i samsvar med SGS 1010, SFS 2213 og Hovedtariffavtalen. Uttak av oppsparte plusstimer og omregnede fridager skal godkjennes av rektor og avvikles slik at det ikke hindrer skolens forsvarlige drift.
                     </p>
                     <div class="signature-area">
@@ -324,13 +330,25 @@
                         <div class="sig-line">Ansattes signatur</div>
                     </div>
                 </div>
+
+                <!-- BUNNTEKST PÅ KONTRAKTEN -->
+                <div class="contract-footer" id="contractFooter">
+                    <div>
+                        <strong id="conFooterSkole">Hånes skoleenhet</strong> <span id="conFooterOrg"></span><br>
+                        <span id="conFooterAdresse"></span>
+                    </div>
+                    <div style="text-align: right;">
+                        <span id="conFooterKontakt"></span><br>
+                        <span>Generert via SGS 1010 Beregningsverktøy</span>
+                    </div>
+                </div>
             </div>
         </div>
-<div class="modal-footer no-print">
-    <button class="btn-sm" onclick="lukkModal()">Lukk</button>
-    <button class="btn btn-save" style="width: auto; padding: 8px 16px; font-size: 13px;" onclick="lukkModal(); lagreOgStartNy();">💾 Lagre & Ny avtale</button>
-    <button class="btn btn-primary" style="width: auto; padding: 8px 16px; font-size: 13px;" onclick="window.print()">🖨️ Skriv ut / Lagre som PDF</button>
-</div>
+        <div class="modal-footer no-print">
+            <button class="btn-sm" onclick="lukkModal()">Lukk</button>
+            <button class="btn btn-save" style="width: auto; padding: 8px 16px; font-size: 13px;" onclick="lukkModal(); lagreOgStartNy();">💾 Lagre & Ny avtale</button>
+            <button class="btn btn-primary" style="width: auto; padding: 8px 16px; font-size: 13px;" onclick="window.print()">🖨️ Skriv ut / Lagre som PDF</button>
+        </div>
     </div>
 </div>
 
