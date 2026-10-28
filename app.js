@@ -516,7 +516,7 @@ function apneSkoleModal() {
     const modal = document.getElementById('modalSkole');
     if (modal) {
         modal.classList.add('active');
-        modal.style.display = 'flex';
+        modal.style.setProperty('display', 'flex', 'important');
         modal.style.zIndex = '2000';
     }
 }
@@ -525,7 +525,7 @@ function lukkSkoleModal() {
     const modal = document.getElementById('modalSkole');
     if (modal) {
         modal.classList.remove('active');
-        modal.style.display = 'none';
+        modal.style.setProperty('display', 'none', 'important');
     }
 }
 
