@@ -393,5 +393,40 @@
     </div>
 </div>
 
+<!-- MODAL FOR SKOLEPROFIL OG LOGO -->
+<div class="modal-overlay" id="modalSkole" onclick="if(event.target===this) lukkSkoleModal()">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3>🏫 Skoleprofil & Logo</h3>
+            <button class="modal-close" onclick="lukkSkoleModal()">&times;</button>
+        </div>
+        <div class="modal-body light" style="padding: 20px;">
+            <div class="form-group">
+                <label for="skoleAdresseInput">Adresse / Poststed:</label>
+                <input type="text" id="skoleAdresseInput" placeholder="f.eks. Skoleveien 1, 4600 Kristiansand" oninput="lagreSkoleProfil()">
+            </div>
+            <div class="form-group">
+                <label for="skoleOrgInput">Organisasjonsnummer (valgfritt):</label>
+                <input type="text" id="skoleOrgInput" placeholder="f.eks. Org.nr: 987 654 321" oninput="lagreSkoleProfil()">
+            </div>
+            <div class="form-group">
+                <label for="skoleKontaktInput">Telefon / E-post / Nettside:</label>
+                <input type="text" id="skoleKontaktInput" placeholder="f.eks. tlf: 38 00 00 00 | post@skole.no" oninput="lagreSkoleProfil()">
+            </div>
+            <div class="form-group">
+                <label>Skolens Logo (PNG / JPG):</label>
+                <input type="file" id="skoleLogoInput" accept="image/*" onchange="handterLogoOpplasting(event)">
+                <div id="logoPreviewContainer" style="margin-top: 10px; display: none; align-items: center; gap: 10px;">
+                    <img id="logoPreviewImg" src="" alt="Logo forhåndsvisning" style="max-height: 40px; border: 1px solid #cbd5e1; padding: 4px; border-radius: 4px;">
+                    <button type="button" class="btn-sm btn-danger" onclick="fjernLogo()">🗑️ Fjern logo</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" style="width:auto; padding:6px 16px;" onclick="lukkSkoleModal()">Ferdig</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
