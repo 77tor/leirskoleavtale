@@ -330,22 +330,24 @@
                     </div>
                 </div>
 
-                <!-- BUNNTEKST PÅ KONTRAKTEN MED LOGO FORANKRET I BUNN -->
-                <div class="contract-footer" id="contractFooter">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div id="conLogoVisning" style="max-width: 100px; max-height: 45px; display: none;">
-                            <img id="conLogoImg" src="" alt="Skolelogo" style="max-width: 100%; max-height: 45px; object-fit: contain;">
-                        </div>
-                        <div>
-                            <strong id="conFooterSkole">Hånes skoleenhet</strong> <span id="conFooterOrg" style="font-size: 8pt; color: #64748b;"></span><br>
-                            <span id="conFooterAdresse" style="font-size: 8pt;"></span>
-                        </div>
-                    </div>
-                    <div style="text-align: right; font-size: 8pt;">
-                        <span id="conFooterKontakt"></span><br>
-                        <span style="color: #94a3b8;">Generert via SGS 1010 Beregningsverktøy</span>
-                    </div>
-                </div>
+<!-- BUNNTEKST PÅ KONTRAKTEN -->
+<div class="contract-footer" id="contractFooter">
+    <div style="display: flex; align-items: center; gap: 14px;">
+        <div id="conLogoVisning" style="max-width: 110px; max-height: 48px; display: none;">
+            <img id="conLogoImg" src="" alt="Skolelogo" style="max-width: 100%; max-height: 48px; object-fit: contain;">
+        </div>
+        <div style="font-size: 8pt; line-height: 1.35; color: #475569;">
+            <div><strong id="conFooterSkole" style="color: #0f172a; font-size: 8.5pt;">Hånes skoleenhet</strong> <span id="conFooterOrg" style="color: #64748b;"></span></div>
+            <div id="conFooterAdresse"></div>
+            <div id="conFooterTlf"></div>
+        </div>
+    </div>
+    <div style="text-align: right; font-size: 8pt; line-height: 1.35; color: #475569;">
+        <div id="conFooterEpost"></div>
+        <div id="conFooterWeb"></div>
+        <div style="color: #94a3b8; margin-top: 2px;">Generert via SGS 1010 Beregningsverktøy</div>
+    </div>
+</div>
 
             </div>
         </div>
@@ -418,25 +420,46 @@
 
 <!-- MODAL FOR SKOLEPROFIL OG LOGO -->
 <div class="modal-overlay" id="modalSkole" onclick="if(event.target===this) lukkSkoleModal()">
-    <div class="modal-content" style="max-width: 500px;">
+    <div class="modal-content" style="max-width: 550px;">
         <div class="modal-header">
             <h3>🏫 Skoleprofil & Logo</h3>
             <button class="modal-close" onclick="lukkSkoleModal()">&times;</button>
         </div>
         <div class="modal-body light" style="padding: 20px;">
-            <div class="form-group">
-                <label for="skoleAdresseInput">Adresse / Poststed:</label>
-                <input type="text" id="skoleAdresseInput" placeholder="f.eks. Skoleveien 1, 4600 Kristiansand" oninput="lagreSkoleProfil()">
+            <div class="form-grid two-col" style="gap: 12px;">
+                <div class="form-group">
+                    <label for="skoleGateInput">Adresse (gate/vei):</label>
+                    <input type="text" id="skoleGateInput" placeholder="f.eks. Øvre Brattbakken 1" oninput="lagreSkoleProfil()">
+                </div>
+                <div class="form-group">
+                    <label for="skolePostInput">Postnr / Poststed:</label>
+                    <input type="text" id="skolePostInput" placeholder="f.eks. 4635 Kristiansand" oninput="lagreSkoleProfil()">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="skoleOrgInput">Organisasjonsnummer (valgfritt):</label>
-                <input type="text" id="skoleOrgInput" placeholder="f.eks. Org.nr: 987 654 321" oninput="lagreSkoleProfil()">
+
+            <div class="form-grid two-col" style="gap: 12px; margin-top: 10px;">
+                <div class="form-group">
+                    <label for="skoleOrgInput">Organisasjonsnummer:</label>
+                    <input type="text" id="skoleOrgInput" placeholder="f.eks. 974 598 825" oninput="lagreSkoleProfil()">
+                </div>
+                <div class="form-group">
+                    <label for="skoleTlfInput">Telefonnummer:</label>
+                    <input type="text" id="skoleTlfInput" placeholder="f.eks. 41535959" oninput="lagreSkoleProfil()">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="skoleKontaktInput">Telefon / E-post / Nettside:</label>
-                <input type="text" id="skoleKontaktInput" placeholder="f.eks. tlf: 38 00 00 00 | post@skole.no" oninput="lagreSkoleProfil()">
+
+            <div class="form-grid two-col" style="gap: 12px; margin-top: 10px;">
+                <div class="form-group">
+                    <label for="skoleEpostInput">E-postadresse:</label>
+                    <input type="text" id="skoleEpostInput" placeholder="f.eks. post@skole.no" oninput="lagreSkoleProfil()">
+                </div>
+                <div class="form-group">
+                    <label for="skoleWebInput">Nettside (URL):</label>
+                    <input type="text" id="skoleWebInput" placeholder="f.eks. minskole.no/haanes" oninput="lagreSkoleProfil()">
+                </div>
             </div>
-            <div class="form-group">
+
+            <div class="form-group" style="margin-top: 14px;">
                 <label>Skolens Logo (PNG / JPG):</label>
                 <input type="file" id="skoleLogoInput" accept="image/*" onchange="handterLogoOpplasting(event)">
                 <div id="logoPreviewContainer" style="margin-top: 10px; display: none; align-items: center; gap: 10px;">
