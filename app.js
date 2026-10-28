@@ -512,6 +512,7 @@ function beregnOrdinatTidFraTabell() {
 // SKOLEPROFIL OG LOGO LOGIKK
 // ==========================================
 function apneSkoleModal() {
+    lastInnSkoleProfil();
     document.getElementById('modalSkole')?.classList.add('active');
 }
 
@@ -611,6 +612,7 @@ function oppdaterSkoleVisning() {
         if (logoPreviewContainer) logoPreviewContainer.style.display = 'none';
     }
 }
+
 
 
 function beregnAlt() {
