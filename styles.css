@@ -66,7 +66,7 @@ header.no-print .header-text {
 /* Skjul logoene på veldig smale mobilskjermer dersom plassen blir for knapp */
 @media screen and (max-width: 600px) {
     .header-logo {
-        height: 32px;
+        height: 26px;
     }
 }
 
