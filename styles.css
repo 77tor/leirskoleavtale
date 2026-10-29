@@ -73,7 +73,7 @@ header.no-print .header-text {
 /* Justering under @media screen and (max-height: 900px) (laptop-visning) */
 @media screen and (max-height: 900px) {
     .header-logo {
-        height: 36px !important;
+        height: 26px !important;
     }
 }
 
