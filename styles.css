@@ -41,6 +41,42 @@ p.subtitle { margin: 6px 0 0 0; opacity: 0.85; font-size: 13.5px; }
 button.btn-lg { padding: 14px 20px; font-size: 15px; width: 100%; }
 
 
+/* Header layout med logoer på sidene */
+header.no-print .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+}
+
+header.no-print .header-text {
+    flex: 1;
+    text-align: center;
+}
+
+/* Størrelse og tilpassing på logoene */
+.header-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* Skjul logoene på veldig smale mobilskjermer dersom plassen blir for knapp */
+@media screen and (max-width: 600px) {
+    .header-logo {
+        height: 32px;
+    }
+}
+
+/* Justering under @media screen and (max-height: 900px) (laptop-visning) */
+@media screen and (max-height: 900px) {
+    .header-logo {
+        height: 36px !important;
+    }
+}
+
 /* ==========================================================================
    3. STEG-NAVIGASJON (PROGRESS BAR)
    ========================================================================== */
