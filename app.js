@@ -599,10 +599,24 @@ function genererDagerTabell() {
             <td><input type="time" class="dag-start" value="${sStart}" data-dato="${datoStreng}" onchange="beregnAlt()"></td>
             <td><input type="time" class="dag-slutt" value="${sSlutt}" data-dato="${datoStreng}" onchange="beregnAlt()"></td>
             <td><span class="dag-timer" id="timer-${datoStreng}">0</span> t</td>
+            <td style="text-align: right;">
+                <button type="button" class="btn-clear-row" title="Tøm denne dagen" onclick="tomEnkeltDag('${datoStreng}')">🧹 Tøm</button>
+            </td>
         `;
         tbody.appendChild(rad);
         gjeldendeDato.setDate(gjeldendeDato.getDate() + 1);
     }
+    beregnAlt();
+}
+
+// Funksjon for å tømme klokkeslettene for én enkelt rad/dag
+function tomEnkeltDag(datoStreng) {
+    const startInput = document.querySelector(`.dag-start[data-dato="${datoStreng}"]`);
+    const sluttInput = document.querySelector(`.dag-slutt[data-dato="${datoStreng}"]`);
+    
+    if (startInput) startInput.value = "";
+    if (sluttInput) sluttInput.value = "";
+
     beregnAlt();
 }
 
@@ -653,7 +667,6 @@ function beregnOrdinatTidFraTabell() {
     if (totVisning) totVisning.innerText = totalOrdinatTid.toFixed(1);
     return totalOrdinatTid;
 }
-
 
 
 // ==========================================
@@ -709,15 +722,14 @@ function fjernLogo() {
 
 // Lagrer profil og logo knyttet til det valgte skolenavnet
 function lagreSkoleProfil(nyLogoBase64) {
-    const skoleNavn = document.getElementById('skoleNavn')?.value.trim() || 'Skole/Virksomhet';
+    const skoleNavn = document.getElementById('skoleNavn')?.value.trim() || '';
+    if (!skoleNavn) return; // Ikke lagre om skolenavnet er helt tomt
     
-    // Hent alle lagrede skoleprofiler fra localStorage
     let arkiv = {};
     try {
         arkiv = JSON.parse(localStorage.getItem('leirskole_skoleprofiler_arkiv')) || {};
     } catch(e) { arkiv = {}; }
 
-    // Hent eksisterende logo dersom det ikke er medsendt en ny logo eller fjerning
     const eksisterendeProfil = arkiv[skoleNavn] || {};
     let gjeldedeLogo = (nyLogoBase64 !== undefined) ? nyLogoBase64 : (eksisterendeProfil.logo || '');
 
@@ -738,24 +750,28 @@ function lagreSkoleProfil(nyLogoBase64) {
 
 // Laster inn riktig profil basert på skolenavnet i feltet
 function lastInnSkoleProfil() {
-    const skoleNavn = document.getElementById('skoleNavn')?.value.trim() || 'Hånes skoleenhet';
+    const skoleNavn = document.getElementById('skoleNavn')?.value.trim() || '';
     
     let arkiv = {};
     try {
         arkiv = JSON.parse(localStorage.getItem('leirskole_skoleprofiler_arkiv')) || {};
     } catch(e) { arkiv = {}; }
 
-    let profil = arkiv[skoleNavn];
+    let profil = null;
 
-    // Sjekk om skolenavnet matcher "Hånes skoleenhet" ELLER "Hånes skole"
-    const navnsjekk = skoleNavn.toLowerCase();
-    const erHanes = navnsjekk === 'hånes skoleenhet' || navnsjekk === 'hånes skole';
+    if (skoleNavn !== '') {
+        profil = arkiv[skoleNavn];
 
-    if (!profil && erHanes) {
-        profil = standardHanesProfil;
+        // Sjekk om skolenavnet matcher Hånes-synonymene dersom profil ikke finnes i arkivet
+        const navnsjekk = skoleNavn.toLowerCase();
+        const erHanes = navnsjekk === 'hånes skoleenhet' || navnsjekk === 'hånes skole';
+
+        if (!profil && erHanes) {
+            profil = standardHanesProfil;
+        }
     }
 
-    // Fyll inn i skjemaet hvis feltene finnes
+    // Fyll inn i skjemaet hvis feltene finnes (blir blankt dersom skoleNavn er tomt)
     if (document.getElementById('skoleGateInput')) document.getElementById('skoleGateInput').value = profil?.gate || '';
     if (document.getElementById('skolePostInput')) document.getElementById('skolePostInput').value = profil?.post || '';
     if (document.getElementById('skoleOrgInput')) document.getElementById('skoleOrgInput').value = profil?.org || '';
@@ -767,25 +783,29 @@ function lastInnSkoleProfil() {
 }
 
 function oppdaterSkoleVisning() {
-    const skoleNavn = document.getElementById('skoleNavn')?.value.trim() || 'Skole/Virksomhet';
+    const skoleNavn = document.getElementById('skoleNavn')?.value.trim() || '';
     
     let arkiv = {};
     try {
         arkiv = JSON.parse(localStorage.getItem('leirskole_skoleprofiler_arkiv')) || {};
     } catch(e) { arkiv = {}; }
 
-    let profil = arkiv[skoleNavn];
+    let profil = null;
 
-    const navnsjekk = skoleNavn.toLowerCase();
-    const erHanes = navnsjekk === 'hånes skoleenhet' || navnsjekk === 'hånes skole';
+    if (skoleNavn !== '') {
+        profil = arkiv[skoleNavn];
 
-    if (!profil && erHanes) {
-        profil = standardHanesProfil;
+        const navnsjekk = skoleNavn.toLowerCase();
+        const erHanes = navnsjekk === 'hånes skoleenhet' || navnsjekk === 'hånes skole';
+
+        if (!profil && erHanes) {
+            profil = standardHanesProfil;
+        }
     }
 
     // Oppdater venstre side i bunnteksten
     const conFooterSkole = document.getElementById('conFooterSkole');
-    if (conFooterSkole) conFooterSkole.innerText = skoleNavn;
+    if (conFooterSkole) conFooterSkole.innerText = skoleNavn || 'Skole/Virksomhet';
     
     const conFooterOrg = document.getElementById('conFooterOrg');
     if (conFooterOrg) conFooterOrg.innerText = profil?.org ? `(${profil.org})` : '';
@@ -825,10 +845,10 @@ function oppdaterSkoleVisning() {
     }
 }
 
-
 // ==========================================
 // SKOLEPROFIL SLUTT
 // ==========================================
+
 function beregnAlt() {
     lagreAktivTilStorage();
     

@@ -186,7 +186,29 @@ button.btn-save { background: #8b5cf6; }
     box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
 }
 
+/* Tøm-knapp per rad i Steg 3 */
+.btn-clear-row {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
 
+.btn-clear-row:hover {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+}
+
+/* Tilpass kolonneoverskriften i HTML-tabellen om nødvendig */
+.day-table th:last-child {
+    text-align: right;
+}
 /* ==========================================================================
    8. MODALER (PREVIEW, ARKIV OG SKOLEPROFIL)
    ========================================================================== */
